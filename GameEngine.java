@@ -1,3 +1,6 @@
+import PlayerScripts.BaseCreature;
+import PlayerScripts.ManageCreatures;
+
 import java.awt.*;
 import java.awt.geom.*;
 
@@ -6,6 +9,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
+import java.util.function.Consumer;
 
 import java.util.Stack;
 import java.util.Random;
@@ -492,7 +496,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
             x = spaceBounds[3] - paddingX - stringBounds.getWidth() + spaceBounds[0];
 
         }
-        y = (spaceBounds[3] + yPosRelative + spaceBounds[1]) / 2d;
+        y = spaceBounds[1] + (spaceBounds[3] - spaceBounds[1]) / 2d + yPosRelative;
         mGraphics.drawString(s, (int)x, (int)y);
     }
 
@@ -507,7 +511,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 
         int paddingX = (int)spaceBounds[2]/10;
 
-        double textHeight = stringBounds.getHeight() + size;
+        double textHeight = stringBounds.getHeight()*0.5;
 
         yPosRelative = spaceBounds[4] * textHeight;
 
@@ -522,8 +526,24 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 
         }
 
-        y = (spaceBounds[3] + yPosRelative + spaceBounds[1]) / 2d ;
+        y = spaceBounds[1] + (spaceBounds[3] - spaceBounds[1]) / 2d + textHeight/2 + yPosRelative*2;
         mGraphics.drawString(s, (int)x, (int)y);
+    }
+
+    public class CoolButton{
+        int stateR, buttonPosX, buttonPosY, width, height, ID;
+        String label;
+
+
+        public void setup(String label, float xPercent, float yPercent, int width, int height, int stateR, int ID){
+            //Dynamic position in-case screen size changes
+            buttonPosX = (int) (DnDGame.getWidth() * xPercent);
+            buttonPosY = (int) (DnDGame.getHeight() * yPercent);
+            this.width = width; this.height = height;
+            this.label = label; this.stateR = stateR;
+            this.ID = ID;
+        }
+
     }
 
 	//-------------------------------------------------------

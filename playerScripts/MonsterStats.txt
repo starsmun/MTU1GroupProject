@@ -1,0 +1,3 @@
+Name,killPrize,maxHealth,defense,attack,maxLevel
+ButtFucker,150,100,20,50,20
+23Fucker,150,100,20,50,20
