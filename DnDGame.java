@@ -89,7 +89,7 @@ public class DnDGame extends GameEngine{
                 selectedPlayer.attackCreature(selectedMonster);
                 break;
 
-            case 1: // Selected Monster attacks Selected player (Not working currently since monsters don't have attack currently
+            case 1: // Selected Monster attacks Selected player
                 selectedMonster.attackCreature(selectedPlayer);
                 break;
 
