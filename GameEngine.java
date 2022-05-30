@@ -483,7 +483,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 
         int paddingX = (int)spaceBounds[2]/10;
 
-        double textHeight = stringBounds.getHeight() + size;
+        double textHeight = stringBounds.getHeight()*0.5;
 
         yPosRelative = spaceBounds[4] * textHeight;
         if(justifyF == "Centre") {
@@ -496,7 +496,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
             x = spaceBounds[3] - paddingX - stringBounds.getWidth() + spaceBounds[0];
 
         }
-        y = spaceBounds[1] + (spaceBounds[3] - spaceBounds[1]) / 2d + yPosRelative;
+        y = spaceBounds[1] + (spaceBounds[3] - spaceBounds[1]) / 2d + textHeight/2 + yPosRelative*2;
         mGraphics.drawString(s, (int)x, (int)y);
     }
 
@@ -535,10 +535,10 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
         String label;
 
 
-        public void setup(String label, float xPercent, float yPercent, int width, int height, int stateR, int ID){
+        public void setup(String label, int x, int y, int width, int height, int stateR, int ID){
             //Dynamic position in-case screen size changes
-            buttonPosX = (int) (DnDGame.getWidth() * xPercent);
-            buttonPosY = (int) (DnDGame.getHeight() * yPercent);
+            buttonPosX = x;
+            buttonPosY = y;
             this.width = width; this.height = height;
             this.label = label; this.stateR = stateR;
             this.ID = ID;

@@ -8,6 +8,22 @@ public class BaseCreature {
         return skillLevel;
     }
 
+    public double getHealth(){
+        return health;
+    }
+
+    public int getMaxHealth(){
+        return maxHealth;
+    }
+
+    public int getDefense(){
+        return defense;
+    }
+
+    public int getAttack(){
+        return attack;
+    }
+
     public boolean takeDamage(int damage){  // Call when Creature takes damage
         health -= damage;
         return health <= 0; // Returns True if creature is dead
