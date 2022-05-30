@@ -70,7 +70,7 @@ public class DnDGame extends GameEngine{
     }
 
     public void paintDefaultLayout(){
-        int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1);
+        int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1); //Dimensions of the box
         changeColor(237,191,149);
         drawSolidRectangle(x,y,w,h);
         changeColor(Color.white);
@@ -79,7 +79,7 @@ public class DnDGame extends GameEngine{
     }
 
     public void paintFightLayout(){
-        int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1);
+        int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1); //Dimensions of the box
         drawImage(player1,(x+w*0.27/2)-70,y+10,140,140);
         changeColor(black);
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,-1},"Health: " + selectedPlayer.getHealth() + "/" + selectedPlayer.getMaxHealth(),"Comic Sans MS",23,"Centre");
