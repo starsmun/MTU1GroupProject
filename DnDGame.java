@@ -14,10 +14,12 @@ public class DnDGame extends GameEngine{
     private static final List<CoolButton> monsterButtons = new LinkedList<>();
     private static int height = 600, width = 1000;
     private static float state = 1;
+    private static String itemTitle="", itemDescription="";
     private static Image player1, monster1, monster2, monster3, monster4;
 
     private static Player selectedPlayer;
     private static Monster selectedMonster = null;
+    private static GameScripts.items selectedItem = null;
 
     private static List<Integer> onScreenMonsters = new LinkedList<>();
 
@@ -58,6 +60,11 @@ public class DnDGame extends GameEngine{
 
         buttons.add(new CoolButton("Back", (int) (x+w*0.60), (int) (y+h*0.8),100,50,1.1f,10));
 
+        buttons.add(new CoolButton("Item 1", (width/3)-32, (int) (y+h*0.10),100,50,1.2f,0));
+        buttons.add(new CoolButton("Item 2", (((2*width/3)-60)+((width/3)-32))/2, (int) (y+h*0.10),100,50,1.2f,1));
+        buttons.add(new CoolButton("Item 3", (2*width/3)-60, (int) (y+h*0.10),100,50,1.2f,2));
+
+        buttons.add(new CoolButton("Back", (int) (x+w*0.60), (int) (y+h*0.8),100,50,1.2f,11));
         centreMonsterButtons(onScreenMonsters);
 
     }
@@ -108,7 +115,7 @@ public class DnDGame extends GameEngine{
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,0},"Attack: " + selectedPlayer.getAttack(),"Comic Sans MS",23,"Centre");
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,1},"Defence: " + selectedPlayer.getDefense(),"Comic Sans MS",23,"Centre");
 
-        if(state == 1){
+        if((state == 1) || (state == 1.2f)){
             CoolButton button;
             for(int id: onScreenMonsters){
                 button = monsterButtons.get(id); drawImage(button.image, button.buttonPosX,button.buttonPosY,button.width,button.height);
@@ -125,6 +132,9 @@ public class DnDGame extends GameEngine{
         }else if (state == 1.1f){
             drawBoldText(new double[]{x+w*0.27,y,x+w*0.73,y+h,-0.5},"Select the Monster","Comic Sans MS",30,"Centre");
             drawBoldText(new double[]{x+w*0.27,y,x+w*0.73,y+h,0.5},"to attack","Comic Sans MS",30,"Centre");
+        } else if (state == 1.2f){
+            drawBoldText(new double[]{x+w*0.27,y-h/6,x+w*0.73,y+h,-0.5}, itemTitle, "Comic Sans MS", 25, "Centre");
+            drawText(new double[]{x+w*0.27,y,x+w*0.73,y+h,-0.5}, itemDescription, "Comic Sans MS", 18, "Centre");
         }
     }
 
@@ -222,9 +232,10 @@ public class DnDGame extends GameEngine{
         if(state == 1){
             switch(ID) {
                 case 0:
-                    if(condition == "press") state = 1.1f;
+                    if (condition == "press") state = 1.1f; // Fight Menu State
                     break;
-
+                case 1:
+                    if (condition == "press") state = 1.2f; // Item Menu State
             }
         }
         else if(state == 1.1f){
@@ -236,6 +247,25 @@ public class DnDGame extends GameEngine{
                     selectedMonster = null;
                     state = 1;
                 }
+            }
+        }
+        else if(state == 1.2f){
+            switch(ID) {
+                case 11:
+                    if (condition == "press") {
+                        selectedItem = null;
+                        state = 1;
+                    }
+                    break;
+                case 0:
+                case 1:
+                case 2:
+                    if (condition == "hover") {
+                        // GRABS THE TITLE AND DESC. FROM THE ITEM
+                        itemTitle = "example";
+                        itemDescription = "this is " + ID;
+                    }
+                    // text to paint = exampleitem.useItem();
             }
         }
     }
