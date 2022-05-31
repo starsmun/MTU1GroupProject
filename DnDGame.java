@@ -12,7 +12,7 @@ import java.util.List;
 public class DnDGame extends GameEngine{
     private static final List<CoolButton> buttons = new LinkedList<>();
     private static int height = 600, width = 1000, state = 1;
-    private static Image player1;
+    private static Image player1, monster1;
 
     private static Player selectedPlayer;
     private static Monster selectedMonster;
@@ -28,23 +28,28 @@ public class DnDGame extends GameEngine{
         ManageCreatures.setupPlayers(1);
 
         player1 = loadImage("PlayerScripts/player1.png");
+        monster1 = loadImage("MonsterAssets/ButtFucker.png");
 
         selectedPlayer = ManageCreatures.playerByIndex(0);
         selectedMonster = ManageCreatures.monsterByIndex(0);
 
         // A New type of button called CoolButton
         int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1);
-        buttons.add(new CoolButton());
-        buttons.get(0).setup("Attack", (int) (x+w*0.3), (int) (y+h*0.25),150,70,1,0);
+        buttons.add(new CoolButton("Attack", (int) (x+w*0.3), (int) (y+h*0.25),150,70,1,0));
 
-        buttons.add(new CoolButton());
-        buttons.get(1).setup("Item", (int) (x+w*0.55), (int) (y+h*0.25),150,70,1,1);
+        buttons.add(new CoolButton("Item", (int) (x+w*0.55), (int) (y+h*0.25),150,70,1,1));
 
-        buttons.add(new CoolButton());
-        buttons.get(2).setup("Heal", (int) (x+w*0.3), (int) (y+h*0.6),150,70,1,2);
+        buttons.add(new CoolButton("Heal", (int) (x+w*0.3), (int) (y+h*0.6),150,70,1,2));
 
-        buttons.add(new CoolButton());
-        buttons.get(3).setup("Run", (int) (x+w*0.55), (int) (y+h*0.6),150,70,1,3);
+        buttons.add(new CoolButton("Run", (int) (x+w*0.55), (int) (y+h*0.6),150,70,1,3));
+
+        buttons.add(new CoolButton(monster1,0,100,150,150,1,4));
+        buttons.add(new CoolButton(monster1,0,100,150,150,1,5));
+        buttons.add(new CoolButton(monster1,0,100,150,150,1,6));
+        buttons.add(new CoolButton(monster1,0,100,150,150,1,7));
+
+
+        centreMonsterButtons(new int[]{4,5,6,7});
 
 
 
@@ -93,8 +98,25 @@ public class DnDGame extends GameEngine{
         drawSolidRectangle(button.buttonPosX,button.buttonPosY,button.width,button.height);
         changeColor(white);
         //Custom Function to properly centre text
-        drawBoldText(new double[]{button.buttonPosX,button.buttonPosY,button.buttonPosX+button.width,
-                button.buttonPosY+button.height,0},button.label,"Comic Sans MS",+button.height/3,"Centre");
+        if(button.label != null){
+            drawBoldText(new double[]{button.buttonPosX,button.buttonPosY,button.buttonPosX+button.width,
+                    button.buttonPosY+button.height,0},button.label,"Comic Sans MS",+button.height/3,"Centre");
+        }else{
+            drawImage(button.image, button.buttonPosX,button.buttonPosY,button.width,button.height);
+        }
+    }
+
+    public void centreMonsterButtons(int[] ids){
+        int nMonsters = ids.length;
+        int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1); //Dimensions of the box
+        float offset = (nMonsters - 1) / 2f;
+        int monsterCount = 0;
+        for(float i = -offset;i <= offset;i++){
+            CoolButton monsterButton = buttons.get(ids[monsterCount]);
+            float xPosRelative = i * monsterButton.width;
+            monsterButton.setButtonPosX((int) (x + (w / 2) + xPosRelative * 1.3) - monsterButton.width/2);
+            monsterCount++;
+        }
     }
 
 

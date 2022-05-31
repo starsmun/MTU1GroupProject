@@ -533,15 +533,29 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
     public class CoolButton{
         int stateR, buttonPosX, buttonPosY, width, height, ID;
         String label;
+        Image image;
 
 
-        public void setup(String label, int x, int y, int width, int height, int stateR, int ID){
+        public CoolButton(String label, int x, int y, int width, int height, int stateR, int ID){
             //Dynamic position in-case screen size changes
             buttonPosX = x;
             buttonPosY = y;
             this.width = width; this.height = height;
             this.label = label; this.stateR = stateR;
             this.ID = ID;
+        }
+
+        public CoolButton(Image image, int x, int y, int width, int height, int stateR, int ID){
+            //Dynamic position in-case screen size changes
+            buttonPosX = x;
+            buttonPosY = y;
+            this.width = width; this.height = height;
+            this.image = image; this.stateR = stateR;
+            this.ID = ID;
+        }
+
+        public void setButtonPosX(int x){
+            buttonPosX = x;
         }
 
     }
