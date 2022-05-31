@@ -10,7 +10,7 @@ public class Monster extends BaseCreature{
     int killPrize, maxLevel;
     String name;
 
-    public void setup(String name) {
+    public Monster(String name) {
         this.name = name;
         Scanner scanner = null;
         try {
@@ -24,6 +24,7 @@ public class Monster extends BaseCreature{
                 if(Objects.equals(mDetails[0], this.name)){
                     killPrize = Integer.parseInt(mDetails[1]);
                     maxHealth = Integer.parseInt(mDetails[2]);
+                    health = maxHealth;
                     defense = Integer.parseInt(mDetails[3]);
                     attack = Integer.parseInt(mDetails[4]);
                     maxLevel = Integer.parseInt(mDetails[5]);

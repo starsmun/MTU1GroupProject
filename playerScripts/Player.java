@@ -15,7 +15,7 @@ public class Player extends BaseCreature{
         return killedCheck;
     }
 
-    public void setup(){
+    public Player(){
         maxHealth = 100;
         health = maxHealth;
         defense = 10;

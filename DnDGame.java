@@ -11,12 +11,15 @@ import java.util.List;
 
 public class DnDGame extends GameEngine{
     private static final List<CoolButton> buttons = new LinkedList<>();
+    private static final List<CoolButton> monsterButtons = new LinkedList<>();
     private static int height = 600, width = 1000;
     private static float state = 1;
     private static Image player1, monster1, monster2, monster3, monster4;
 
     private static Player selectedPlayer;
-    private static Monster selectedMonster;
+    private static Monster selectedMonster = null;
+
+    private static List<Integer> onScreenMonsters = new LinkedList<>();
 
     public static void main(String args[]) {
         DnDGame game = new DnDGame();
@@ -34,7 +37,10 @@ public class DnDGame extends GameEngine{
         monster3 = loadImage("MonsterAssets/Trolle.png");
         monster4 = loadImage("MonsterAssets/UnPol.png");
 
-
+        onScreenMonsters.add(0);
+        onScreenMonsters.add(1);
+        onScreenMonsters.add(2);
+        onScreenMonsters.add(3);
 
         selectedPlayer = ManageCreatures.playerByIndex(0);
 
@@ -45,19 +51,18 @@ public class DnDGame extends GameEngine{
         buttons.add(new CoolButton("Heal", (int) (x+w*0.3), (int) (y+h*0.6),150,70,1,2));
         buttons.add(new CoolButton("Run", (int) (x+w*0.55), (int) (y+h*0.6),150,70,1,3));
 
-        buttons.add(new CoolButton(monster1,0,height/6,150,150,1.1f,4));
-        buttons.add(new CoolButton(monster2,0,height/6,150,150,1.1f,5));
-        buttons.add(new CoolButton(monster3,0,height/6,150,150,1.1f,6));
-        buttons.add(new CoolButton(monster4,0,height/6,150,150,1.1f,7));
+        monsterButtons.add(new CoolButton(monster1,0,height/6,150,150,1.1f,0));
+        monsterButtons.add(new CoolButton(monster2,0,height/6,150,150,1.1f,1));
+        monsterButtons.add(new CoolButton(monster3,0,height/6,150,150,1.1f,2));
+        monsterButtons.add(new CoolButton(monster4,0,height/6,150,150,1.1f,3));
 
         buttons.add(new CoolButton("Back", (int) (x+w*0.60), (int) (y+h*0.8),100,50,1.1f,10));
 
-        centreMonsterButtons(new int[]{4,5,6,7});
+        centreMonsterButtons(onScreenMonsters);
 
     }
 
     public void update(double dt) {
-
     }
 
 
@@ -70,6 +75,17 @@ public class DnDGame extends GameEngine{
         for(CoolButton button : buttons){
             if(button.stateR == state) {
                 paintButton(button);
+            }
+        }
+
+        for(CoolButton button : monsterButtons){
+            if(button.stateR == state) {
+                try{
+                    onScreenMonsters.get(button.ID);
+                    paintButton(button);
+                }catch (IndexOutOfBoundsException ignored){
+
+                }
             }
         }
     }
@@ -94,11 +110,9 @@ public class DnDGame extends GameEngine{
 
         if(state == 1){
             CoolButton button;
-            button = buttons.get(4); drawImage(button.image, button.buttonPosX,button.buttonPosY,button.width,button.height);
-            button = buttons.get(5); drawImage(button.image, button.buttonPosX,button.buttonPosY,button.width,button.height);
-            button = buttons.get(6); drawImage(button.image, button.buttonPosX,button.buttonPosY,button.width,button.height);
-            button = buttons.get(7); drawImage(button.image, button.buttonPosX,button.buttonPosY,button.width,button.height);
-
+            for(int id: onScreenMonsters){
+                button = monsterButtons.get(id); drawImage(button.image, button.buttonPosX,button.buttonPosY,button.width,button.height);
+            }
         }
 
 
@@ -108,6 +122,9 @@ public class DnDGame extends GameEngine{
             drawText(new double[]{x+w*0.27,y,x+w*0.73,y+h,-0.5},"Health: " + selectedMonster.getHealth() + "/" + selectedMonster.getMaxHealth(),"Comic Sans MS",23,"Centre");
             drawText(new double[]{x+w*0.27,y,x+w*0.73,y+h,0.5},"Attack: " + selectedMonster.getAttack(),"Comic Sans MS",23,"Centre");
             drawText(new double[]{x+w*0.27,y,x+w*0.73,y+h,1.5},"Defence: " + selectedMonster.getDefense(),"Comic Sans MS",23,"Centre");
+        }else if (state == 1.1f){
+            drawBoldText(new double[]{x+w*0.27,y,x+w*0.73,y+h,-0.5},"Select the Monster","Comic Sans MS",30,"Centre");
+            drawBoldText(new double[]{x+w*0.27,y,x+w*0.73,y+h,0.5},"to attack","Comic Sans MS",30,"Centre");
         }
     }
 
@@ -129,13 +146,13 @@ public class DnDGame extends GameEngine{
         }
     }
 
-    public void centreMonsterButtons(int[] ids){
-        int nMonsters = ids.length;
+    public void centreMonsterButtons(List<Integer> ids){
+        int nMonsters = ids.size();
         int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1); //Dimensions of the box
         float offset = (nMonsters - 1) / 2f;
         int monsterCount = 0;
         for(float i = -offset;i <= offset;i++){
-            CoolButton monsterButton = buttons.get(ids[monsterCount]);
+            CoolButton monsterButton = monsterButtons.get(ids.get(monsterCount));
             float xPosRelative = i * monsterButton.width;
             monsterButton.setButtonPosX((int) (x + (w / 2) + xPosRelative * 1.3) - monsterButton.width/2);
             monsterCount++;
@@ -155,20 +172,39 @@ public class DnDGame extends GameEngine{
                 }
             }
         }
+        for(CoolButton button : monsterButtons){
+            if(button.stateR == state){
+                if(mouseX >= button.buttonPosX && mouseX <= button.buttonPosX+button.width && mouseY >= button.buttonPosY && mouseY <= button.buttonPosY+button.height) {
+                    callButtonMethod(button.ID,"press");
+                }
+            }
+        }
     }
 
     public void mouseMoved(MouseEvent e){
         int mouseX = e.getX();
         int mouseY = e.getY();
-
+        selectedMonster = null;
         //Checks if any buttons are pressed
         for(CoolButton button : buttons){
             if(button.stateR == state){
                 if(mouseX >= button.buttonPosX && mouseX <= button.buttonPosX+button.width && mouseY >= button.buttonPosY && mouseY <= button.buttonPosY+button.height) {
-                   button.setSelected(true);
+                    button.setSelected(true);
                     callButtonMethod(button.ID,"hover");
                 }else{
                     button.setSelected(false);
+
+                }
+            }
+        }
+        for(CoolButton button : monsterButtons){
+            if(button.stateR == state){
+                if(mouseX >= button.buttonPosX && mouseX <= button.buttonPosX+button.width && mouseY >= button.buttonPosY && mouseY <= button.buttonPosY+button.height) {
+                    button.setSelected(true);
+                    callButtonMethod(button.ID,"hover");
+                }else{
+                    button.setSelected(false);
+
                 }
             }
         }
@@ -192,36 +228,15 @@ public class DnDGame extends GameEngine{
             }
         }
         else if(state == 1.1f){
-            switch(ID) {
-                case 4:
-                    selectedMonster = ManageCreatures.monsterByIndex(0);
-                    if(condition == "press") selectedPlayer.attackCreature(selectedMonster);
-                    break;
-
-                case 5:
-                    selectedMonster = ManageCreatures.monsterByIndex(1);
-                    if(condition == "press") selectedPlayer.attackCreature(selectedMonster);
-                    break;
-
-                case 6:
-                    selectedMonster = ManageCreatures.monsterByIndex(2);
-                    if(condition == "press") selectedPlayer.attackCreature(selectedMonster);
-                    break;
-
-                case 7:
-                    selectedMonster = ManageCreatures.monsterByIndex(3);
-                    if(condition == "press") selectedPlayer.attackCreature(selectedMonster);
-                    break;
-
-                case 10:
-                    if(condition == "press") {
-                        selectedMonster = null;
-                        state = 1;
-                    }
+            if(ID < 4) {
+                selectedMonster = ManageCreatures.monsterByIndex(ID);
+                if(condition == "press") selectedPlayer.attackCreature(selectedMonster);
+            }else {
+                if(condition == "press") {
+                    selectedMonster = null;
+                    state = 1;
+                }
             }
-
         }
-
-
     }
 }
