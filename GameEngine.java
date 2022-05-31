@@ -531,12 +531,14 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
     }
 
     public class CoolButton{
-        int stateR, buttonPosX, buttonPosY, width, height, ID;
+        float stateR;
+        int buttonPosX, buttonPosY, width, height, ID;
         String label;
         Image image;
+        boolean selected = false;
 
 
-        public CoolButton(String label, int x, int y, int width, int height, int stateR, int ID){
+        public CoolButton(String label, int x, int y, int width, int height, float stateR, int ID){
             //Dynamic position in-case screen size changes
             buttonPosX = x;
             buttonPosY = y;
@@ -545,7 +547,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
             this.ID = ID;
         }
 
-        public CoolButton(Image image, int x, int y, int width, int height, int stateR, int ID){
+        public CoolButton(Image image, int x, int y, int width, int height, float stateR, int ID){
             //Dynamic position in-case screen size changes
             buttonPosX = x;
             buttonPosY = y;
@@ -558,6 +560,9 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
             buttonPosX = x;
         }
 
+        public void setSelected(boolean selected){
+            this.selected = selected;
+        }
     }
 
 	//-------------------------------------------------------
