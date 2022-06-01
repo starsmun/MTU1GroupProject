@@ -29,8 +29,7 @@ public class ManageCreatures {
                 .collect(Collectors.toList());
         int i = 0;
         for (String m : monstersList) {
-            monsters.add(new Monster());
-            monsters.get(i).setup(m.split("\\.")[0]); //removes file extension
+            monsters.add(new Monster(m.split("\\.")[0]));
             i++;
         }
     }
@@ -39,7 +38,6 @@ public class ManageCreatures {
     public static void setupPlayers(int nPlayers) {
         for (int i = 0; i < nPlayers; i++) {
             players.add(new Player());
-            players.get(i).setup();
         }
     }
 

@@ -1,3 +1,5 @@
 Name,killPrize,maxHealth,defense,attack,maxLevel
-ButtFucker,150,100,20,50,20
-23Fucker,150,100,20,50,20
+UnPol,150,200,10,15,20
+Fred,150,25,2,20,20
+Trolle,150,100,85,18,20
+Mark,150,75,10,5,20

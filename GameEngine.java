@@ -483,7 +483,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 
         int paddingX = (int)spaceBounds[2]/10;
 
-        double textHeight = stringBounds.getHeight() + size;
+        double textHeight = stringBounds.getHeight()*0.5;
 
         yPosRelative = spaceBounds[4] * textHeight;
         if(justifyF == "Centre") {
@@ -496,7 +496,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
             x = spaceBounds[3] - paddingX - stringBounds.getWidth() + spaceBounds[0];
 
         }
-        y = spaceBounds[1] + (spaceBounds[3] - spaceBounds[1]) / 2d + yPosRelative;
+        y = spaceBounds[1] + (spaceBounds[3] - spaceBounds[1]) / 2d + textHeight/2 + yPosRelative*2;
         mGraphics.drawString(s, (int)x, (int)y);
     }
 
@@ -531,19 +531,38 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
     }
 
     public class CoolButton{
-        int stateR, buttonPosX, buttonPosY, width, height, ID;
+        float stateR;
+        int buttonPosX, buttonPosY, width, height, ID;
         String label;
+        Image image;
+        boolean selected = false;
 
 
-        public void setup(String label, float xPercent, float yPercent, int width, int height, int stateR, int ID){
+        public CoolButton(String label, int x, int y, int width, int height, float stateR, int ID){
             //Dynamic position in-case screen size changes
-            buttonPosX = (int) (DnDGame.getWidth() * xPercent);
-            buttonPosY = (int) (DnDGame.getHeight() * yPercent);
+            buttonPosX = x;
+            buttonPosY = y;
             this.width = width; this.height = height;
             this.label = label; this.stateR = stateR;
             this.ID = ID;
         }
 
+        public CoolButton(Image image, int x, int y, int width, int height, float stateR, int ID){
+            //Dynamic position in-case screen size changes
+            buttonPosX = x;
+            buttonPosY = y;
+            this.width = width; this.height = height;
+            this.image = image; this.stateR = stateR;
+            this.ID = ID;
+        }
+
+        public void setButtonPosX(int x){
+            buttonPosX = x;
+        }
+
+        public void setSelected(boolean selected){
+            this.selected = selected;
+        }
     }
 
 	//-------------------------------------------------------
