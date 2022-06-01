@@ -13,8 +13,7 @@ public class DnDGame extends GameEngine{
     private static final List<CoolButton> monsterButtons = new LinkedList<>();
     private static int height = 600, width = 1000;
     private static float state = 1;
-    private static String itemTitle="", itemDescription="";
-    private static Image blankButton, background, player1, monster1, monster2, monster3, monster4;
+    private static Image background, player1, monster1, monster2, monster3, monster4;
 
     private static Player selectedPlayer;
     private static Monster selectedMonster = null;
@@ -35,7 +34,6 @@ public class DnDGame extends GameEngine{
         ManageItems.setupItems();
 
         background = loadImage("GameAssets/background.png");
-        blankButton = loadImage("GameAssets/button.png");
 
         player1 = loadImage("PlayerScripts/player1.png");
         monster1 = loadImage("MonsterAssets/Fred.png");
@@ -87,7 +85,7 @@ public class DnDGame extends GameEngine{
             if(button.stateR == state) {
                 if(button.ID > 3 && button.ID < 8) {
                     try {
-                        onScreenItems.get(button.ID - 4);
+                        onScreenMonsters.get(button.ID - 4);
                         paintButton(button);
                     } catch (IndexOutOfBoundsException ignored) {
 
@@ -157,8 +155,7 @@ public class DnDGame extends GameEngine{
     public void paintButton(CoolButton button){
          //Key is the text of the label
         changeColor(black);
-        // drawSolidRectangle(button.buttonPosX,button.buttonPosY,button.width,button.height);
-        drawImage(blankButton, button.buttonPosX,button.buttonPosY,button.width,button.height);
+        drawSolidRectangle(button.buttonPosX,button.buttonPosY,button.width,button.height);
         changeColor(white);
         //Custom Function to properly centre text
         if(button.label != null){
@@ -241,7 +238,7 @@ public class DnDGame extends GameEngine{
 
         else if(state == 1.1f){
             if(ID > 3 && ID < 8) {
-                selectedMonster = ManageCreatures.monsterByIndex(ID);
+                selectedMonster = ManageCreatures.monsterByIndex(ID-4);
                 if(condition == "press") selectedPlayer.attackCreature(selectedMonster);
             }else {
                 if(condition == "press") {
