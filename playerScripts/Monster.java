@@ -22,12 +22,21 @@ public class Monster extends BaseCreature{
                 line = scanner.nextLine();
                 mDetails = line.split(",");
                 if(Objects.equals(mDetails[0], this.name)){
-                    killPrize = Integer.parseInt(mDetails[1]);
-                    maxHealth = Integer.parseInt(mDetails[2]);
+                    try{
+                        killPrize = Integer.parseInt(mDetails[1]);
+                        maxHealth = Integer.parseInt(mDetails[2]);
+                        defense = Integer.parseInt(mDetails[3]);
+                        attack = Integer.parseInt(mDetails[4]);
+                        maxLevel = Integer.parseInt(mDetails[5]);
+                    }
+                    catch(NumberFormatException e){
+                        killPrize = 0;
+                        maxHealth = 10;
+                        defense = 10;
+                        attack = 10;
+                        maxLevel = 10;
+                    }
                     health = maxHealth;
-                    defense = Integer.parseInt(mDetails[3]);
-                    attack = Integer.parseInt(mDetails[4]);
-                    maxLevel = Integer.parseInt(mDetails[5]);
                     break;
                 }
 
