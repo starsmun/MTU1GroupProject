@@ -11,7 +11,8 @@ import java.util.List;
 public class DnDGame extends GameEngine{
     private static final List<CoolButton> buttons = new LinkedList<>();
     private static final List<CoolButton> monsterButtons = new LinkedList<>();
-    private static int height = 600, width = 1000;
+    private static int height = 600, width = 1000, nFrame, direction = 1;
+    private static int[] monsterOffsetsY = new int[4], monsterDirectionY = {1,1,1,1};
     private static float state = 1;
     private static Image blankButton, background, player1, monster1, monster2, monster3, monster4;
 
@@ -26,7 +27,7 @@ public class DnDGame extends GameEngine{
 
     public static void main(String args[]) {
         DnDGame game = new DnDGame();
-        createGame(game,30);
+        createGame(game,60);
     }
 
     public void init(){
@@ -56,10 +57,10 @@ public class DnDGame extends GameEngine{
         buttons.add(new CoolButton("Heal", (int) (x+w*0.3), (int) (y+h*0.6),150,70,1,2));
         buttons.add(new CoolButton("Run", (int) (x+w*0.55), (int) (y+h*0.6),150,70,1,3));
 
-        buttons.add(new CoolButton(monster1,0,height/6,150,150,1.1f,4));
-        buttons.add(new CoolButton(monster2,0,height/6,150,150,1.1f,5));
-        buttons.add(new CoolButton(monster3,0,height/6,150,150,1.1f,6));
-        buttons.add(new CoolButton(monster4,0,height/6,150,150,1.1f,7));
+        buttons.add(new CoolButton(monster1,0,height/9,150,150,1.1f,4));
+        buttons.add(new CoolButton(monster2,0,height/9,150,150,1.1f,5));
+        buttons.add(new CoolButton(monster3,0,height/9,150,150,1.1f,6));
+        buttons.add(new CoolButton(monster4,0,height/9,150,150,1.1f,7));
 
         buttons.add(new CoolButton("Item 1",0,(int) (y+h*0.10),100,50,1.2f,8));
         buttons.add(new CoolButton("Item 2",0,(int) (y+h*0.10),100,50,1.2f,9));
@@ -73,6 +74,23 @@ public class DnDGame extends GameEngine{
     }
 
     public void update(double dt) {
+        nFrame++;
+        if(nFrame > 30){
+            nFrame = 0;
+        }
+        for(int id: onScreenMonsters){
+            if(nFrame % 2 == 0 || nFrame % 5 == 0){
+                if(monsterOffsetsY[id-4] > 30){
+                    monsterDirectionY[id-4] = -1;
+                }
+                else if (monsterOffsetsY[id-4] < 0){
+                    monsterDirectionY[id-4] = 1;
+                }
+
+                monsterOffsetsY[id-4] += monsterDirectionY[id-4] * ManageCreatures.monsterByIndex(id-4).getAttack() / 2;
+            }
+
+        }
     }
 
 
@@ -143,7 +161,7 @@ public class DnDGame extends GameEngine{
         if((state == 1) || (state == 1.2f)){
             CoolButton button;
             for(int id: onScreenMonsters){
-                button = buttons.get(id); drawImage(button.image, button.buttonPosX,button.buttonPosY,button.width,button.height);
+                button = buttons.get(id); drawImage(button.image, button.buttonPosX,button.buttonPosY+monsterOffsetsY[id-4],button.width,button.height);
             }
         }
         if(state == 1.1f && selectedMonster != null){

@@ -12,14 +12,14 @@ public class Player extends BaseCreature{
         List<String> events = super.attackCreature(monster);
 
         boolean killedCheck = monster.health == 0;
-        events.add("You attacked the monster");
+        events.add("You attacked " + monster.name);
 
         int damage = attack - monster.defense;
 
         if (!killedCheck) { // If creature killed
             events.add("You hit! You deal " + damage + " damage");
         } else {
-            events.add("You killed the monster,you get " + monster.killPrize + " gold");
+            events.add("You killed " + monster.name +",You get " + monster.killPrize + " gold");
         }
         return events;
     }
