@@ -1,5 +1,5 @@
-Name,killPrize,maxHealth,defense,attack,maxLevel
-UnPol,150,200,10,15,20
-Fred,150,25,2,20,20
-Trolle,150,100,20,18,20
-Mark,150,75,10,5,20
+ID,Name,killPrize,maxHealth,defense,attack,maxLevel
+4,Minotaurs,150,200,10,14,20
+5,Lich,150,25,2,20,20
+6,Reptilian,150,100,20,18,20
+7,Knight,150,75,10,15,20
