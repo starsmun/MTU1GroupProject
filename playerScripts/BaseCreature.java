@@ -1,5 +1,8 @@
 package PlayerScripts;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class BaseCreature {
     int maxHealth, defense, attack, skillLevel,health;
 
@@ -24,14 +27,17 @@ public class BaseCreature {
     }
 
     public boolean takeDamage(int damage){  // Call when Creature takes damage
-        health -= Math.max(damage - defense,0);
+        health -= Math.max(damage,0);
 
         if(health < 0) health = 0;
 
         return health <= 0; // Returns True if creature is dead
     }
 
-    public boolean attackCreature(BaseCreature creature){ // Call when attacking another Creature
-        return creature.takeDamage(attack); // Returns True if creature is dead
+    public List<String> attackCreature(BaseCreature creature){ // Call when attacking another Creature
+        List<String> events = new LinkedList<>();
+
+        creature.takeDamage(attack - creature.defense);
+        return events;
     }
 }

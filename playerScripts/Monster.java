@@ -3,6 +3,8 @@ package PlayerScripts;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -59,12 +61,20 @@ public class Monster extends BaseCreature{
         return killPrize;
     }
 
-    public boolean attackCreature(Player player) {
-        boolean killedCheck = super.attackCreature(player);
-        if(killedCheck){ // If creature killed
-            System.out.println("Player is dead");
+    public List<String> attackCreature(Player player) {
+        super.attackCreature(player);
 
+        boolean killedCheck = player.health == 0;
+        List<String> events = new LinkedList<>();
+        events.add("You attacked the monster");
+
+        int damage = attack-player.defense;
+
+        if(!killedCheck){ // If creature killed
+            events.add(name + " attacked dealing " + damage + " damage");
+        }else{
+            events.add("You died");
         }
-        return killedCheck;
+        return events;
     }
 }

@@ -128,7 +128,7 @@ public class DnDGame extends GameEngine{
 
         int i = 0;
         for(String event : pastEvents){
-            if(event.length() < 35){
+            if(event.length() < 30){
                 i++;
                 drawText(x+w*0.75,y+(width/40*(i+1)),event,"Comic Sans MS",18);
             }else{
