@@ -21,10 +21,10 @@ public class DnDGame extends GameEngine{
     private static Monster previousMonster = null;
     private static Item selectedItem = null;
 
+    private static AudioClip menuMusic, fightMusic;
 
     private static List<String> onScreenMonsters = new LinkedList<>();
     private static List<String> onScreenItems = new LinkedList<>();
-
     private static List<String> pastEvents = new LinkedList<>();
 
     public static void main(String args[]) {
@@ -46,6 +46,9 @@ public class DnDGame extends GameEngine{
         monster2 = loadImage("MonsterAssets/Mark.png");
         monster3 = loadImage("MonsterAssets/Trolle.png");
         monster4 = loadImage("MonsterAssets/UnPol.png");
+
+        menuMusic = loadAudio("GameAssets/backgroundMusic.wav");
+        fightMusic = loadAudio("GameAssets/fightMusic.wav");
 
         selectedPlayer = ManageCreatures.playerByIndex(0);
 
@@ -75,6 +78,12 @@ public class DnDGame extends GameEngine{
         buttons.add(new CoolButton("Back", (int) (x+w*0.60), (int) (y+h*0.8),100,50,1.2f,12));
         centreItems(onScreenMonsters);
         centreItems(onScreenItems);
+
+        if((state < 1) || (state >= 2)){
+            startAudioLoop(menuMusic);
+        }else{
+            startAudioLoop(fightMusic);
+        }
 
     }
 
@@ -279,7 +288,7 @@ public class DnDGame extends GameEngine{
         pastEvents.add(event);
     }
 
-    public static void callButtonMethod(int ID,String condition){
+    public void callButtonMethod(int ID,String condition){
         if(state == 1){
             switch(ID) {
                 case 0:
@@ -309,7 +318,11 @@ public class DnDGame extends GameEngine{
                     }else{
                         pastEvents.addAll(selectedMonster.attackCreature(selectedPlayer));
                     }
-                    if(onScreenMonsters.size() == 0) state = 10;
+                    if(onScreenMonsters.size() == 0) {
+                        state = 10;
+                        stopAudioLoop(fightMusic);
+                        startAudioLoop(menuMusic);
+                    }
                     else centreItems(onScreenMonsters);
                     previousMonster = selectedMonster;
                 }

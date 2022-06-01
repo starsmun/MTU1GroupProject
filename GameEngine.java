@@ -755,10 +755,10 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 	public AudioClip loadAudio(String filename) {
 		try {
 			// Open File
-			File file = new File(filename);
+			;
 
 			// Open Audio Input Stream
-			AudioInputStream audio = AudioSystem.getAudioInputStream(file);
+			AudioInputStream audio = AudioSystem.getAudioInputStream(new File(filename).getAbsoluteFile());
 
 			// Create Audio Clip
 			AudioClip clip = new AudioClip(audio);
@@ -767,7 +767,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 			return clip;
 		} catch(Exception e) {
 			// Catch Exception
-			System.out.println("Error: cannot open Audio File " + filename + "\n");
+			System.out.println(e);
 		}
 
 		// Return Null

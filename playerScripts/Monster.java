@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Monster extends BaseCreature{
     int killPrize, maxLevel;
-    String name;
+    String name, ID;
 
     public Monster(String name) {
         this.name = name;
@@ -23,13 +23,14 @@ public class Monster extends BaseCreature{
             while (scanner.hasNextLine()) {
                 line = scanner.nextLine();
                 mDetails = line.split(",");
-                if(Objects.equals(mDetails[0], this.name)){
+                if(Objects.equals(mDetails[1], this.name)){
+                    ID = mDetails[0];
                     try{
-                        killPrize = Integer.parseInt(mDetails[1]);
-                        maxHealth = Integer.parseInt(mDetails[2]);
-                        defense = Integer.parseInt(mDetails[3]);
-                        attack = Integer.parseInt(mDetails[4]);
-                        maxLevel = Integer.parseInt(mDetails[5]);
+                        killPrize = Integer.parseInt(mDetails[2]);
+                        maxHealth = Integer.parseInt(mDetails[3]);
+                        defense = Integer.parseInt(mDetails[4]);
+                        attack = Integer.parseInt(mDetails[5]);
+                        maxLevel = Integer.parseInt(mDetails[6]);
                     }
                     catch(NumberFormatException e){
                         killPrize = 0;
@@ -57,6 +58,14 @@ public class Monster extends BaseCreature{
         return name;
     }
 
+    public void setID(String ID){
+        this.ID = ID;
+    }
+
+    public String getID(){
+        return ID;
+    }
+
     public int getKillPrize(){
         return killPrize;
     }
@@ -71,7 +80,7 @@ public class Monster extends BaseCreature{
         int damage = attack-player.defense;
 
         if(!killedCheck){ // If creature killed
-            events.add(name + " attacked dealing " + damage + " damage");
+            events.add(name + " attacked!,Dealing " + damage + " damage");
         }else{
             events.add("You died");
         }
