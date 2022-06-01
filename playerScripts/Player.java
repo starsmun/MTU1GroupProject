@@ -42,9 +42,17 @@ public class Player extends BaseCreature{
         return items;
     }
 
+    public int getMoney(){
+        return money;
+    }
+
     public void heal(){
         health += 40;
         if(health > 100) health = 100;
+    }
+
+    public void resetGold(){
+        money = 0;
     }
 
 }

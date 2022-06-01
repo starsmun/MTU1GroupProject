@@ -13,7 +13,8 @@ public class DnDGame extends GameEngine{
     private static final List<CoolButton> monsterButtons = new LinkedList<>();
     private static int height = 600, width = 1000, nFrame, direction = 1;
     private static int[] monsterOffsetsY = new int[4], monsterDirectionY = {1,1,1,1};
-    private static float state = 1;
+    private static int[] monsterOffsetsX = new int[4], monsterDirectionX = {1,1,1,1};
+    private static float state = 0;
     private static Image blankButton, background, player1, monster1, monster2, monster3, monster4;
 
     private static Player selectedPlayer;
@@ -42,10 +43,10 @@ public class DnDGame extends GameEngine{
         blankButton = loadImage("GameAssets/button.png");
 
         player1 = loadImage("PlayerScripts/player1.png");
-        monster1 = loadImage("MonsterAssets/Fred.png");
-        monster2 = loadImage("MonsterAssets/Mark.png");
-        monster3 = loadImage("MonsterAssets/Trolle.png");
-        monster4 = loadImage("MonsterAssets/UnPol.png");
+        monster1 = subImage(loadImage("MonsterAssets/Knight.png"),0,0,94,94);
+        monster2 = subImage(loadImage("MonsterAssets/Lich.png"),0,0,94,94);
+        monster3 = subImage(loadImage("MonsterAssets/Minotaurs.png"),0,0,94,94);
+        monster4 = subImage(loadImage("MonsterAssets/Reptilian.png"),0,0,94,94);
 
         menuMusic = loadAudio("GameAssets/backgroundMusic.wav");
         fightMusic = loadAudio("GameAssets/fightMusic.wav");
@@ -76,6 +77,12 @@ public class DnDGame extends GameEngine{
 
         buttons.add(new CoolButton("Back", (int) (x+w*0.60), (int) (y+h*0.8),100,50,1.1f,11));
         buttons.add(new CoolButton("Back", (int) (x+w*0.60), (int) (y+h*0.8),100,50,1.2f,12));
+        buttons.add(new CoolButton("Menu", width/2 - 75, height/2 + 130,150,70,10,13));
+        buttons.add(new CoolButton("Menu", width/2 - 75, height/2 + 130,150,70,10.1f,14));
+
+        buttons.add(new CoolButton("Play", width/2 - 175, height/2,150,70,0,15));
+        buttons.add(new CoolButton("Quit", width/2 + 25, height/2,150,70,0,16));
+        buttons.add(new CoolButton("Menu", width/2 - 75, height/2 + 130,150,70,10.2f,17));
         centreItems(onScreenMonsters);
         centreItems(onScreenItems);
 
@@ -88,23 +95,36 @@ public class DnDGame extends GameEngine{
     }
 
     public void update(double dt) {
+        if(selectedPlayer.getHealth() == 0){
+            state = 10.2f;
+            stopAudioLoop(fightMusic);
+            startAudioLoop(menuMusic);
+            selectedPlayer.heal();
+            selectedPlayer.resetGold();
+        }
         nFrame++;
         if(nFrame > 30){
             nFrame = 0;
         }
-        for(String id: onScreenMonsters){
-            if(nFrame % 2 == 0 || nFrame % 5 == 0){
+        for(String id: onScreenMonsters) {
+            if (nFrame % 2 == 0 || nFrame % 5 == 0) {
                 int ID = Integer.parseInt(id);
-                if(monsterOffsetsY[ID-4] > 30){
-                    monsterDirectionY[ID-4] = -1;
+                if (monsterOffsetsY[ID - 4] > 30) {
+                    monsterDirectionY[ID - 4] = -1;
+                } else if (monsterOffsetsY[ID - 4] < 0) {
+                    monsterDirectionY[ID - 4] = 1;
                 }
-                else if (monsterOffsetsY[ID-4] < 0){
-                    monsterDirectionY[ID-4] = 1;
-                }
-
                 monsterOffsetsY[ID-4] += monsterDirectionY[ID-4] * ManageCreatures.monsterByIndex(ID-4).getAttack() / 2;
             }
-
+            if (nFrame % 5 == 0) {
+                int ID = Integer.parseInt(id);
+                if (monsterOffsetsX[ID - 4] > 10) {
+                    monsterDirectionX[ID - 4] = -1;
+                } else if (monsterOffsetsX[ID - 4] < -10) {
+                    monsterDirectionX[ID - 4] = 1;
+                }
+                monsterOffsetsX[ID-4] += monsterDirectionX[ID-4] * ManageCreatures.monsterByIndex(ID-4).getDefense() / 4;
+            }
         }
     }
 
@@ -117,6 +137,20 @@ public class DnDGame extends GameEngine{
         if((state >= 1) && (state < 2)){
             paintDefaultLayout();
             paintFightLayout();
+        }else if(state >= 10){
+            changeColor(0,0,0,200);
+            drawSolidRectangle(300,200,400,200);
+            changeColor(Color.white);
+            drawText(new double[]{0,0,(double) width, (double) height,0.5},"Your Current Gold is " + selectedPlayer.getMoney(),"Comic Sans MS",30,"Centre");
+            if(state == 10){
+                drawBoldText(new double[]{0,0,(double) width, (double) height,-0.5},"YOU WON!!","Comic Sans MS",40,"Centre");
+            }
+            else if(state == 10.1f){
+                drawBoldText(new double[]{0,0,(double) width, (double) height,-0.5},"You ran away","Comic Sans MS",40,"Centre");
+            }
+            else if(state == 10.2f){
+                drawBoldText(new double[]{0,0,(double) width, (double) height,-0.5},"You Died","Comic Sans MS",40,"Centre");
+            }
         }
         // For every button in list (Should add something to check for state)
         for(CoolButton button : buttons){
@@ -176,7 +210,7 @@ public class DnDGame extends GameEngine{
         if((state == 1) || (state == 1.2f)){
             CoolButton button;
             for(String id: onScreenMonsters){
-                button = buttons.get(Integer.parseInt(id)); drawImage(button.image, button.buttonPosX,button.buttonPosY+monsterOffsetsY[Integer.parseInt(id)-4],button.width,button.height);
+                button = buttons.get(Integer.parseInt(id)); drawImage(button.image, button.buttonPosX+monsterOffsetsX[Integer.parseInt(id)-4],button.buttonPosY+monsterOffsetsY[Integer.parseInt(id)-4],button.width,button.height);
             }
         }
         if(state == 1.1f && selectedMonster != null){
@@ -289,13 +323,30 @@ public class DnDGame extends GameEngine{
     }
 
     public void callButtonMethod(int ID,String condition){
-        if(state == 1){
+        if(state == 0){
+            switch(ID) {
+                case 15:
+                    if (condition == "press"){
+                        stopAudioLoop(menuMusic);
+                        startAudioLoop(fightMusic);
+                        state = 1;
+                        break;
+                    }
+
+                case 16:
+                    if (condition == "press"){
+                        System.exit(420);
+                    }
+            }
+        }
+        else if(state == 1){
             switch(ID) {
                 case 0:
                     if (condition == "press") state = 1.1f; // Fight Menu State
                     break;
                 case 1:
                     if (condition == "press") state = 1.2f; // Item Menu State
+                    break;
 
                 case 2:
                     if (condition == "press") {
@@ -303,6 +354,15 @@ public class DnDGame extends GameEngine{
                         pastEvents.add("You healed, giving 40 health");
                         if(previousMonster != null) if(previousMonster.getHealth() != 0) pastEvents.addAll(previousMonster.attackCreature(selectedPlayer));
                     }; // Item Menu State
+                    break;
+
+                case 3:
+                    if (condition == "press"){
+                        state = 10.1f;
+                        stopAudioLoop(fightMusic);
+                        startAudioLoop(menuMusic);
+                    }
+
             }
         }
 
@@ -322,6 +382,9 @@ public class DnDGame extends GameEngine{
                         state = 10;
                         stopAudioLoop(fightMusic);
                         startAudioLoop(menuMusic);
+                        pastEvents = new LinkedList<>();
+                        pastEvents.add("Nobodys Here");
+                        pastEvents.add("Go Home");
                     }
                     else centreItems(onScreenMonsters);
                     previousMonster = selectedMonster;
@@ -342,6 +405,22 @@ public class DnDGame extends GameEngine{
                     selectedItem = null;
                     state = 1;
                 }
+            }
+        }
+
+        else if(state == 10){
+            if(ID == 13){
+                if(condition == "press") state = 0;
+            }
+        }
+        else if(state == 10.1f){
+            if(ID == 14){
+                if(condition == "press") state = 0;
+            }
+        }
+        else if(state == 10.2f){
+            if(ID == 17){
+                if(condition == "press") state = 0;
             }
         }
 
