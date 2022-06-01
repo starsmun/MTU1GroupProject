@@ -1,13 +1,35 @@
 package GameScripts;
 
-public class items extends ManageItems{
+import java.util.Random;
 
-    public items(){
-        count = 0; // Amount of this item currently held
-        effect = 0; // An integer value that determines the effect when the useItem function is called
-        dmg = 0; // Base damage the item will do (if a damaging item)
-        title = "None"; // The title - or name - of the item
-        description = "N/a"; // Self Explanatory
+public class Item extends ManageItems{
+    int id, count,effect,dmg;
+    String title, description;
+
+
+    public Item(String[] iDetails){
+        Random randomNumberGenerator = new Random();
+        new Random();
+        count = randomNumberGenerator.nextInt(2); // Amount of this item currently held
+        try{
+            effect = Integer.parseInt(iDetails[2]); // An integer value that determines the effect when the useItem function is called
+            dmg = Integer.parseInt(iDetails[3]); // Base damage the item will do (if a damaging item)
+        }
+        catch(NumberFormatException e){
+            effect = 0;
+            dmg = 5;
+        }
+
+        title = iDetails[1]; // The title - or name - of the item
+        description = iDetails[4]; // Self Explanatory
+    }
+
+    public String getTitle(){
+        return title;
+    }
+
+    public String getDescription(){
+        return description;
     }
 
     public String useItem() {
