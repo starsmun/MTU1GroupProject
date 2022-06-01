@@ -10,7 +10,7 @@ import java.util.List;
 
 public class DnDGame extends GameEngine{
     private static final List<CoolButton> buttons = new LinkedList<>();
-    private static int height = 1000, width = 1000, state = 0;
+    private static int height = 640, width = 1080, state = 0;
 
     private static Player selectedPlayer;
     private static Monster selectedMonster;
