@@ -15,7 +15,7 @@ public class DnDGame extends GameEngine{
     private static int height = 600, width = 1000;
     private static float state = 1;
     private static String itemTitle="", itemDescription="";
-    private static Image player1, monster1, monster2, monster3, monster4;
+    private static Image background, player1, monster1, monster2, monster3, monster4;
 
     private static Player selectedPlayer;
     private static Monster selectedMonster = null;
@@ -38,6 +38,7 @@ public class DnDGame extends GameEngine{
         monster2 = loadImage("MonsterAssets/Mark.png");
         monster3 = loadImage("MonsterAssets/Trolle.png");
         monster4 = loadImage("MonsterAssets/UnPol.png");
+        background = loadImage("GameAssets/background.png");
 
         onScreenMonsters.add(0);
         onScreenMonsters.add(1);
@@ -76,6 +77,8 @@ public class DnDGame extends GameEngine{
     public void paintComponent() {
         changeBackgroundColor(84,84,84);
         clearBackground(width,height);
+        drawImage(background, 0,0);
+
         paintDefaultLayout();
         paintFightLayout();
         // For every button in list (Should add something to check for state)
