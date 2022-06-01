@@ -15,7 +15,7 @@ public class DnDGame extends GameEngine{
     private static int height = 600, width = 1000;
     private static float state = 1;
     private static String itemTitle="", itemDescription="";
-    private static Image background, player1, monster1, monster2, monster3, monster4;
+    private static Image buttonBlank, background, player1, monster1, monster2, monster3, monster4;
 
     private static Player selectedPlayer;
     private static Monster selectedMonster = null;
@@ -39,6 +39,7 @@ public class DnDGame extends GameEngine{
         monster3 = loadImage("MonsterAssets/Trolle.png");
         monster4 = loadImage("MonsterAssets/UnPol.png");
         background = loadImage("GameAssets/background.png");
+        buttonBlank = loadImage("GameAssets/button.png");
 
         onScreenMonsters.add(0);
         onScreenMonsters.add(1);
@@ -77,7 +78,7 @@ public class DnDGame extends GameEngine{
     public void paintComponent() {
         changeBackgroundColor(84,84,84);
         clearBackground(width,height);
-        drawImage(background, 0,0);
+        drawImage(background, 0,0); //Adds already sized image to background
 
         paintDefaultLayout();
         paintFightLayout();
@@ -144,7 +145,8 @@ public class DnDGame extends GameEngine{
     public void paintButton(CoolButton button){
          //Key is the text of the label
         changeColor(black);
-        drawSolidRectangle(button.buttonPosX,button.buttonPosY,button.width,button.height);
+        //drawSolidRectangle(button.buttonPosX,button.buttonPosY,button.width,button.height);
+        drawImage(buttonBlank, button.buttonPosX,button.buttonPosY,button.width,button.height);
         changeColor(white);
         //Custom Function to properly centre text
         if(button.label != null){
