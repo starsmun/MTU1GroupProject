@@ -8,17 +8,25 @@ public class Player extends BaseCreature{
     List<Integer> items = new LinkedList<>();
 
 
-    public boolean attackCreature(Monster monster) {
-        boolean killedCheck = super.attackCreature(monster);
-        if(killedCheck){ // If creature killed
-            System.out.println("Congrats you won " + monster.killPrize + " gold");
+    public List<String> attackCreature(Monster monster) {
+        List<String> events = super.attackCreature(monster);
+
+        boolean killedCheck = monster.health == 0;
+        events.add("You attacked the monster");
+
+        int damage = attack - monster.defense;
+
+        if (!killedCheck) { // If creature killed
+            events.add("You hit! You deal " + damage + " damage");
+        } else {
+            events.add("You killed the monster,you get " + monster.killPrize + " gold");
         }
-        return killedCheck;
+        return events;
     }
 
     public Player(){
         maxHealth = 100; health = maxHealth; defense = 10;
-        attack = 100; money = 100; level = 0;
+        attack = 30; money = 100; level = 0;
 
         items.add(8);
         items.add(9);

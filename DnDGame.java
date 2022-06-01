@@ -126,15 +126,26 @@ public class DnDGame extends GameEngine{
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,0},"Attack: " + selectedPlayer.getAttack(),"Comic Sans MS",23,"Centre");
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,1},"Defence: " + selectedPlayer.getDefense(),"Comic Sans MS",23,"Centre");
 
+        int i = 0;
+        for(String event : pastEvents){
+            if(event.length() < 35){
+                i++;
+                drawText(x+w*0.75,y+(width/40*(i+1)),event,"Comic Sans MS",18);
+            }else{
+                i++;
+                drawText(x+w*0.75,y+(width/40*(i+1)),event.split(",")[0],"Comic Sans MS",18);
+                i++;
+                drawText(x+w*0.75,y+(width/40*(i+1)),event.split(",")[1],"Comic Sans MS",18);
+            }
+
+        }
+
         if((state == 1) || (state == 1.2f)){
             CoolButton button;
             for(int id: onScreenMonsters){
                 button = buttons.get(id); drawImage(button.image, button.buttonPosX,button.buttonPosY,button.width,button.height);
             }
         }
-
-
-
         if(state == 1.1f && selectedMonster != null){
             drawBoldText(new double[]{x+w*0.27,y,x+w*0.73,y+h,-1.5},selectedMonster.getName(),"Comic Sans MS",30,"Centre");
             drawText(new double[]{x+w*0.27,y,x+w*0.73,y+h,-0.5},"Health: " + selectedMonster.getHealth() + "/" + selectedMonster.getMaxHealth(),"Comic Sans MS",23,"Centre");
@@ -229,8 +240,8 @@ public class DnDGame extends GameEngine{
         return height;
     }
 
-    public static void addEvent(){
-
+    public static void addEvent(String event){
+        pastEvents.add(event);
     }
 
     public static void callButtonMethod(int ID,String condition){
@@ -247,7 +258,7 @@ public class DnDGame extends GameEngine{
         else if(state == 1.1f){
             if(ID > 3 && ID < 8) {
                 selectedMonster = ManageCreatures.monsterByIndex(ID-4);
-                if(condition == "press") selectedPlayer.attackCreature(selectedMonster);
+                if(condition == "press") pastEvents.addAll(selectedPlayer.attackCreature(selectedMonster));
             }else {
                 if(condition == "press") {
                     selectedMonster = null;
