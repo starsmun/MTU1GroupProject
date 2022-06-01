@@ -20,7 +20,9 @@ public class DnDGame extends GameEngine{
     private static Item selectedItem = null;
 
     private static List<Integer> onScreenMonsters = new LinkedList<>();
-    private static List<Integer> onScreenItems = new ArrayList<>();
+    private static List<Integer> onScreenItems = new LinkedList<>();
+
+    private static List<String> pastEvents = new LinkedList<>();
 
     public static void main(String args[]) {
         DnDGame game = new DnDGame();
@@ -108,9 +110,9 @@ public class DnDGame extends GameEngine{
 
     public void paintDefaultLayout(){
         int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1); //Dimensions of the box
-        changeColor(237,191,149);
+        changeColor(237,191,149,190);
         drawSolidRectangle(x,y,w,h);
-        changeColor(Color.white);
+        changeColor(255,255,255,190);
         drawSolidRectangle(x+w*0.27,y,5,h);
         drawSolidRectangle(x+w*0.73,y,5,h);
     }
@@ -227,7 +229,11 @@ public class DnDGame extends GameEngine{
         return height;
     }
 
-    public void callButtonMethod(int ID,String condition){
+    public static void addEvent(){
+
+    }
+
+    public static void callButtonMethod(int ID,String condition){
         if(state == 1){
             switch(ID) {
                 case 0:

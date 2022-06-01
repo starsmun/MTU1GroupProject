@@ -357,7 +357,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 	}
 
 	// Changes the drawing Color to the color (red,green,blue)
-	public void changeColor(int red, int green, int blue) {
+	public void changeColor(int red, int green, int blue, int alpha) {
 		// Clamp values
 		if(red < 0)   {red = 0;}
 		if(red > 255) {red = 255;}
@@ -369,7 +369,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 		if(blue > 255) {blue = 255;}
 
 		// Set colour
-		mGraphics.setColor(new Color(red,green,blue));
+		mGraphics.setColor(new Color(red,green,blue,alpha));
 	}
 
 	// Draws a line from (x1,y2) to (x2,y2)
