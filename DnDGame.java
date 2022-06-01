@@ -18,10 +18,12 @@ public class DnDGame extends GameEngine{
 
     private static Player selectedPlayer;
     private static Monster selectedMonster = null;
+    private static Monster previousMonster = null;
     private static Item selectedItem = null;
 
-    private static List<Integer> onScreenMonsters = new LinkedList<>();
-    private static List<Integer> onScreenItems = new LinkedList<>();
+
+    private static List<String> onScreenMonsters = new LinkedList<>();
+    private static List<String> onScreenItems = new LinkedList<>();
 
     private static List<String> pastEvents = new LinkedList<>();
 
@@ -47,7 +49,10 @@ public class DnDGame extends GameEngine{
 
         selectedPlayer = ManageCreatures.playerByIndex(0);
 
-        onScreenMonsters = List.of(4, 5, 6, 7);
+        onScreenMonsters.add("4");
+        onScreenMonsters.add("5");
+        onScreenMonsters.add("6");
+        onScreenMonsters.add("7");
         onScreenItems = selectedPlayer.getItems();
 
         // A New type of button called CoolButton
@@ -78,16 +83,17 @@ public class DnDGame extends GameEngine{
         if(nFrame > 30){
             nFrame = 0;
         }
-        for(int id: onScreenMonsters){
+        for(String id: onScreenMonsters){
             if(nFrame % 2 == 0 || nFrame % 5 == 0){
-                if(monsterOffsetsY[id-4] > 30){
-                    monsterDirectionY[id-4] = -1;
+                int ID = Integer.parseInt(id);
+                if(monsterOffsetsY[ID-4] > 30){
+                    monsterDirectionY[ID-4] = -1;
                 }
-                else if (monsterOffsetsY[id-4] < 0){
-                    monsterDirectionY[id-4] = 1;
+                else if (monsterOffsetsY[ID-4] < 0){
+                    monsterDirectionY[ID-4] = 1;
                 }
 
-                monsterOffsetsY[id-4] += monsterDirectionY[id-4] * ManageCreatures.monsterByIndex(id-4).getAttack() / 2;
+                monsterOffsetsY[ID-4] += monsterDirectionY[ID-4] * ManageCreatures.monsterByIndex(ID-4).getAttack() / 2;
             }
 
         }
@@ -99,22 +105,22 @@ public class DnDGame extends GameEngine{
         clearBackground(width,height);
         drawImage(background, 0,0);
 
-        paintDefaultLayout();
-        paintFightLayout();
+        if((state >= 1) && (state < 2)){
+            paintDefaultLayout();
+            paintFightLayout();
+        }
         // For every button in list (Should add something to check for state)
         for(CoolButton button : buttons){
             if(button.stateR == state) {
                 if(button.ID > 3 && button.ID < 8) {
                     try {
-                        onScreenMonsters.get(button.ID - 4);
-                        paintButton(button);
+                        if(onScreenMonsters.indexOf(String.valueOf(button.ID)) >= 0) paintButton(button);
                     } catch (IndexOutOfBoundsException ignored) {
 
                     }
                 }else if(button.ID > 7 && button.ID < 11){
                     try{
-                        onScreenItems.get(button.ID - 8);
-                        paintButton(button);
+                        if(onScreenItems.indexOf(String.valueOf(button.ID)) >= 0) paintButton(button);
                     }catch (IndexOutOfBoundsException ignored){
 
                     }
@@ -160,8 +166,8 @@ public class DnDGame extends GameEngine{
 
         if((state == 1) || (state == 1.2f)){
             CoolButton button;
-            for(int id: onScreenMonsters){
-                button = buttons.get(id); drawImage(button.image, button.buttonPosX,button.buttonPosY+monsterOffsetsY[id-4],button.width,button.height);
+            for(String id: onScreenMonsters){
+                button = buttons.get(Integer.parseInt(id)); drawImage(button.image, button.buttonPosX,button.buttonPosY+monsterOffsetsY[Integer.parseInt(id)-4],button.width,button.height);
             }
         }
         if(state == 1.1f && selectedMonster != null){
@@ -203,11 +209,11 @@ public class DnDGame extends GameEngine{
         }
     }
 
-    public void centreItems(List<Integer> ids){
+    public static void centreItems(List<String> ids){
         int nItems = ids.size();
         int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1); //Dimensions of the box
         float offset = (nItems - 1) / 2f;
-        int count = ids.get(0);
+        int count = Integer.parseInt(ids.get(0));
         for(float i = -offset;i <= offset;i++){
             CoolButton button = buttons.get(count);
             float xPosRelative = i * button.width;
@@ -225,7 +231,11 @@ public class DnDGame extends GameEngine{
         for(CoolButton button : buttons){
             if(button.stateR == state){
                 if(mouseX >= button.buttonPosX && mouseX <= button.buttonPosX+button.width && mouseY >= button.buttonPosY && mouseY <= button.buttonPosY+button.height) {
-                    callButtonMethod(button.ID,"press");
+                    if(button.ID > 3 && button.ID < 8) {
+                        if (onScreenMonsters.indexOf(String.valueOf(button.ID)) >= 0) callButtonMethod(button.ID, "press");
+                    }
+                    else callButtonMethod(button.ID, "press");
+
                 }
             }
         }
@@ -240,8 +250,15 @@ public class DnDGame extends GameEngine{
         for(CoolButton button : buttons){
             if(button.stateR == state){
                 if(mouseX >= button.buttonPosX && mouseX <= button.buttonPosX+button.width && mouseY >= button.buttonPosY && mouseY <= button.buttonPosY+button.height) {
-                    button.setSelected(true);
-                    callButtonMethod(button.ID,"hover");
+                    if(button.ID > 3 && button.ID < 8) {
+                        if (onScreenMonsters.indexOf(String.valueOf(button.ID)) >= 0){
+                            button.setSelected(true);
+                            callButtonMethod(button.ID,"hover");
+                        }
+                    }else{
+                        button.setSelected(true);
+                        callButtonMethod(button.ID,"hover");
+                    }
                 }else{
                     button.setSelected(false);
 
@@ -270,13 +287,32 @@ public class DnDGame extends GameEngine{
                     break;
                 case 1:
                     if (condition == "press") state = 1.2f; // Item Menu State
+
+                case 2:
+                    if (condition == "press") {
+                        selectedPlayer.heal();
+                        pastEvents.add("You healed, giving 40 health");
+                        if(previousMonster != null) if(previousMonster.getHealth() != 0) pastEvents.addAll(previousMonster.attackCreature(selectedPlayer));
+                    }; // Item Menu State
             }
         }
 
         else if(state == 1.1f){
             if(ID > 3 && ID < 8) {
                 selectedMonster = ManageCreatures.monsterByIndex(ID-4);
-                if(condition == "press") pastEvents.addAll(selectedPlayer.attackCreature(selectedMonster));
+                if(condition == "press") {
+                    pastEvents = selectedPlayer.attackCreature(selectedMonster);
+                    if(selectedMonster.getHealth() == 0){
+                        int index = onScreenMonsters.indexOf(ID + "");
+                        onScreenMonsters.remove(index);
+
+                    }else{
+                        pastEvents.addAll(selectedMonster.attackCreature(selectedPlayer));
+                    }
+                    if(onScreenMonsters.size() == 0) state = 10;
+                    else centreItems(onScreenMonsters);
+                    previousMonster = selectedMonster;
+                }
             }else {
                 if(condition == "press") {
                     selectedMonster = null;
@@ -287,7 +323,7 @@ public class DnDGame extends GameEngine{
 
         else if(state == 1.2f){
             if(ID > 7 && ID < 11) {
-                selectedItem = ManageItems.getItem(selectedPlayer.getItem(ID-8)-8);
+                selectedItem = ManageItems.getItem(Integer.parseInt(selectedPlayer.getItem(ID-8))-8);
             }else {
                 if (condition == "press") {
                     selectedItem = null;
