@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
-public class ManageItems { // Definitions of each value is in items.java
+public class ManageItems {
 
     public static List<Item> items = new LinkedList<>();
 
