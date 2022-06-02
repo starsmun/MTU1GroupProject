@@ -39,6 +39,8 @@ public class DnDGame extends GameEngine{
         ManageCreatures.setupPlayers(1);
         ManageItems.setupItems();
 
+        //-------------------------------------  Loads Images  ------------------------------------------//
+
         background = loadImage("GameAssets/background.png");
         blankButton = loadImage("GameAssets/button.png");
 
@@ -48,44 +50,67 @@ public class DnDGame extends GameEngine{
         monster3 = subImage(loadImage("MonsterAssets/Minotaurs.png"),0,0,94,94);
         monster4 = subImage(loadImage("MonsterAssets/Reptilian.png"),0,0,94,94);
 
+        //---------------------------------------------------------------------------------------------//
+
+        //       Load Music     //
         menuMusic = loadAudio("GameAssets/backgroundMusic.wav");
         fightMusic = loadAudio("GameAssets/fightMusic.wav");
 
-        selectedPlayer = ManageCreatures.playerByIndex(0);
 
+        selectedPlayer = ManageCreatures.playerByIndex(0); // This is the current player
+
+        // Monsters that are alive //
         onScreenMonsters.add("4");
         onScreenMonsters.add("5");
         onScreenMonsters.add("6");
         onScreenMonsters.add("7");
+
+        // Items that the player has //
         onScreenItems = selectedPlayer.getItems();
 
-        // A New type of button called CoolButton
+        //-------------------------------------  Loads Buttons  ------------------------------------------//
+
+        //  Dimensions of the main box  //
         int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1);
+
+
+        // StareR = State the button appears in, ID = same as button ID, used instead if a button gets removed
+
+        //  Main Fight Buttons  //
         buttons.add(new CoolButton("Attack", (int) (x+w*0.3), (int) (y+h*0.25),150,70,1,0));
         buttons.add(new CoolButton("Item", (int) (x+w*0.55), (int) (y+h*0.25),150,70,1,1));
         buttons.add(new CoolButton("Heal", (int) (x+w*0.3), (int) (y+h*0.6),150,70,1,2));
         buttons.add(new CoolButton("Run", (int) (x+w*0.55), (int) (y+h*0.6),150,70,1,3));
 
+        //  Monster Buttons  //
         buttons.add(new CoolButton(monster1,0,height/9,150,150,1.1f,4));
         buttons.add(new CoolButton(monster2,0,height/9,150,150,1.1f,5));
         buttons.add(new CoolButton(monster3,0,height/9,150,150,1.1f,6));
         buttons.add(new CoolButton(monster4,0,height/9,150,150,1.1f,7));
 
+        //  Item Buttons  //
         buttons.add(new CoolButton("Item 1",0,(int) (y+h*0.10),100,50,1.2f,8));
         buttons.add(new CoolButton("Item 2",0,(int) (y+h*0.10),100,50,1.2f,9));
         buttons.add(new CoolButton("Item 3",0,(int) (y+h*0.10),100,50,1.2f,10));
 
+        // State Change Buttons //
         buttons.add(new CoolButton("Back", (int) (x+w*0.60), (int) (y+h*0.8),100,50,1.1f,11));
         buttons.add(new CoolButton("Back", (int) (x+w*0.60), (int) (y+h*0.8),100,50,1.2f,12));
         buttons.add(new CoolButton("Menu", width/2 - 75, height/2 + 130,150,70,10,13));
         buttons.add(new CoolButton("Menu", width/2 - 75, height/2 + 130,150,70,10.1f,14));
 
+        //  Main Menu Buttons  //
         buttons.add(new CoolButton("Play", width/2 - 175, height/2,150,70,0,15));
         buttons.add(new CoolButton("Quit", width/2 + 25, height/2,150,70,0,16));
         buttons.add(new CoolButton("Menu", width/2 - 75, height/2 + 130,150,70,10.2f,17));
-        centreItems(onScreenMonsters);
-        centreItems(onScreenItems);
 
+        //---------------------------------------------------------------------------------------------//
+
+
+        centreItems(onScreenMonsters); // Centres Monsters
+        centreItems(onScreenItems); // Centres Items
+
+        // Plays first instance of Music based on state //
         if((state < 1) || (state >= 2)){
             startAudioLoop(menuMusic);
         }else{
@@ -94,7 +119,10 @@ public class DnDGame extends GameEngine{
 
     }
 
+    //
     public void update(double dt) {
+
+        // If Player Dies, reset gold, change state, change music, and heal alittle
         if(selectedPlayer.getHealth() == 0){
             state = 10.2f;
             stopAudioLoop(fightMusic);
@@ -102,10 +130,14 @@ public class DnDGame extends GameEngine{
             selectedPlayer.heal();
             selectedPlayer.resetGold();
         }
+
+        //Counts frames per second
         nFrame++;
         if(nFrame > 30){
             nFrame = 0;
         }
+
+        //For onScreenMonsters, moves the monster
         for(String id: onScreenMonsters) {
             if (nFrame % 2 == 0 || nFrame % 5 == 0) {
                 int ID = Integer.parseInt(id);
@@ -114,6 +146,7 @@ public class DnDGame extends GameEngine{
                 } else if (monsterOffsetsY[ID - 4] < 0) {
                     monsterDirectionY[ID - 4] = 1;
                 }
+                // Makes Movement different using attack
                 monsterOffsetsY[ID-4] += monsterDirectionY[ID-4] * ManageCreatures.monsterByIndex(ID-4).getAttack() / 2;
             }
             if (nFrame % 5 == 0) {
@@ -123,6 +156,7 @@ public class DnDGame extends GameEngine{
                 } else if (monsterOffsetsX[ID - 4] < -10) {
                     monsterDirectionX[ID - 4] = 1;
                 }
+                // Makes Movement different using defense
                 monsterOffsetsX[ID-4] += monsterDirectionX[ID-4] * ManageCreatures.monsterByIndex(ID-4).getDefense() / 4;
             }
         }
