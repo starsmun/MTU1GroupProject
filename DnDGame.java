@@ -44,7 +44,7 @@ public class DnDGame extends GameEngine{
         background = loadImage("GameAssets/background.png");
         blankButton = loadImage("GameAssets/button.png");
 
-        player1 = loadImage("PlayerScripts/player1.png");
+        player1 = loadImage("PlayerScripts/warrior.png");
         monster1 = subImage(loadImage("MonsterAssets/Knight.png"),0,0,94,94);
         monster2 = subImage(loadImage("MonsterAssets/Lich.png"),0,0,94,94);
         monster3 = subImage(loadImage("MonsterAssets/Minotaurs.png"),0,0,94,94);
@@ -220,12 +220,14 @@ public class DnDGame extends GameEngine{
 
     public void paintFightLayout(){
         int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1); //Dimensions of the box
-        drawImage(player1,(x+w*0.27/2)-70,y+10,140,140);
+        drawImage(player1,(x+w*0.27/2)-70,y+10,180,180);
         changeColor(black);
 
-        drawText(new double[]{x,y+h/2,x+w*0.27,y+h,-1},"Health: " + selectedPlayer.getHealth() + "/" + selectedPlayer.getMaxHealth(),"Comic Sans MS",23,"Centre");
-        drawText(new double[]{x,y+h/2,x+w*0.27,y+h,0},"Attack: " + selectedPlayer.getAttack(),"Comic Sans MS",23,"Centre");
-        drawText(new double[]{x,y+h/2,x+w*0.27,y+h,1},"Defence: " + selectedPlayer.getDefense(),"Comic Sans MS",23,"Centre");
+        drawBoldText(new double[]{x,y+h/2,x+w*0.27,y+h,-5},"Your Stats: ","Comic Sans MS",26,"Centre");
+        drawText(new double[]{x,y+h/2,x+w*0.27,y+h,-1},"Health: " + selectedPlayer.getHealth() + "/" + selectedPlayer.getMaxHealth(),"Comic Sans MS",20,"Centre");
+        drawText(new double[]{x,y+h/2,x+w*0.27,y+h,0},"Attack: " + selectedPlayer.getAttack(),"Comic Sans MS",20,"Centre");
+        drawText(new double[]{x,y+h/2,x+w*0.27,y+h,1},"Defence: " + selectedPlayer.getDefense(),"Comic Sans MS",20,"Centre");
+        drawText(new double[]{x,y+h/2,x+w*0.27,y+h,2},"Gold: " + selectedPlayer.getMoney(),"Comic Sans MS",20,"Centre");
 
         int i = 0;
         for(String event : pastEvents){
