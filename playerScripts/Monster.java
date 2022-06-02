@@ -75,7 +75,6 @@ public class Monster extends BaseCreature{
 
         boolean killedCheck = player.health == 0;
         List<String> events = new LinkedList<>();
-        events.add("You attacked the monster");
 
         int damage = attack-player.defense;
 
