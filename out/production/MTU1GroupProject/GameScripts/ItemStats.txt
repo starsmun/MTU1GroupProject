@@ -1,4 +1,0 @@
-ID,Title,Effect,Damage,Description
-8,Potion of Death,2,15,Potion that stabs like a knife
-9,Plastic Knife,0,3,Item that tried but just can't
-10,Stink Bomb,1,8,Bomb that doesn't hurt but #smells really bad

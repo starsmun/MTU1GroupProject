@@ -1,11 +1,18 @@
 import PlayerScripts.*;
 import GameScripts.*;
 
-
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
+
+
+/*/   Group Members   ///
+ Lachlan W-S   21005784
+ Brook Pugmire 15204583
+ Floyd Smith   21010980
+///                  /*/
+
 
 
 public class DnDGame extends GameEngine{
