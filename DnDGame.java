@@ -291,6 +291,8 @@ public class DnDGame extends GameEngine{
                 drawText(new double[]{x+w*0.27,y-h/6,x+w*0.73,y+h,1.5}, selectedItem.getDescription().split("#")[1], "Comic Sans MS", 18, "Centre");
             }
 
+            drawText(new double[]{x+w*0.27,y+h*0.70,x+w*0.73,y+h*0.77,0}, "Use Items coming soon", "Comic Sans MS", 20, "Centre");
+
         }
     }
 
