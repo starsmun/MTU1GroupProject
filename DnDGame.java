@@ -163,16 +163,18 @@ public class DnDGame extends GameEngine{
         }
     }
 
+//--------------------------------------------------- Paint Functions ---------------------------------------------------//
 
+    // Sets the game canvas up with a background - then decides what it should draw on top of it
     public void paintComponent() {
         changeBackgroundColor(84,84,84);
         clearBackground(width,height);
         drawImage(background, 0,0);
 
-        if((state >= 1) && (state < 2)){
+        if((state >= 1) && (state < 2)){ // For Battling
             paintDefaultLayout();
             paintFightLayout();
-        }else if(state >= 10){
+        }else if(state >= 10){ // End Battle State: If its Won, Lost or Forfeited
             changeColor(0,0,0,200);
             drawSolidRectangle(300,200,400,200);
             changeColor(Color.white);
@@ -210,6 +212,7 @@ public class DnDGame extends GameEngine{
         }
     }
 
+    // Draws the basic HUD rectangles that hold the game information
     public void paintDefaultLayout(){
         int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1); //Dimensions of the box
         changeColor(237,191,149,190);
@@ -219,17 +222,20 @@ public class DnDGame extends GameEngine{
         drawSolidRectangle(x+w*0.73,y,5,h);
     }
 
+    // Draws the fight layout - including the player's stats, selected enemy's stats, selected item info and the event list
     public void paintFightLayout(){
         int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1); //Dimensions of the box
+
+        // Draws player stats & status
         drawImage(player1,(x+w*0.23/2)-70,y+10,180,180);
         changeColor(black);
-
         drawBoldText(new double[]{x,y+h/2,x+w*0.27,y+h,-5},"Your Stats: ","Comic Sans MS",26,"Centre");
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,-1},"Health: " + selectedPlayer.getHealth() + "/" + selectedPlayer.getMaxHealth(),"Comic Sans MS",20,"Centre");
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,0},"Attack: " + selectedPlayer.getAttack(),"Comic Sans MS",20,"Centre");
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,1},"Defence: " + selectedPlayer.getDefense(),"Comic Sans MS",20,"Centre");
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,2},"Gold: " + selectedPlayer.getMoney(),"Comic Sans MS",20,"Centre");
 
+        // Draws the event viewer
         drawBoldText(new double[]{x+w*1.45,y+h/2,x+w*0.27,y+h,-5},"Recap:","Comic Sans MS",26,"Centre");
         int i = 0;
         for(String event : pastEvents){
@@ -245,25 +251,28 @@ public class DnDGame extends GameEngine{
 
         }
 
+        // Draws the header in the fight menu
         if((state == 1) || (state == 1.2f)){
             CoolButton button;
             if(state==1){
                 drawBoldText(new double[]{x+w*0.75,y+h/2,x+w*0.27,y+h,-5},"What would you like to do?","Comic Sans MS",26,"Centre");
 
-            }
+            } // Draws the monsters as images using their button ID's values
             for(String id: onScreenMonsters){
                 button = buttons.get(Integer.parseInt(id)); drawImage(button.image, button.buttonPosX+monsterOffsetsX[Integer.parseInt(id)-4],button.buttonPosY+monsterOffsetsY[Integer.parseInt(id)-4],button.width,button.height);
             }
         }
+
+        // Shows a monster's stats when it's selected in the fight game screen
         if(state == 1.1f && selectedMonster != null){
             drawBoldText(new double[]{x+w*0.27,y,x+w*0.73,y+h,-1.5},selectedMonster.getName(),"Comic Sans MS",30,"Centre");
             drawText(new double[]{x+w*0.27,y,x+w*0.73,y+h,-0.5},"Health: " + selectedMonster.getHealth() + "/" + selectedMonster.getMaxHealth(),"Comic Sans MS",23,"Centre");
             drawText(new double[]{x+w*0.27,y,x+w*0.73,y+h,0.5},"Attack: " + selectedMonster.getAttack(),"Comic Sans MS",23,"Centre");
             drawText(new double[]{x+w*0.27,y,x+w*0.73,y+h,1.5},"Defence: " + selectedMonster.getDefense(),"Comic Sans MS",23,"Centre");
-        }else if (state == 1.1f){
+        }else if (state == 1.1f){ // Default text telling the player how to attack
             drawBoldText(new double[]{x+w*0.27,y,x+w*0.73,y+h,-0.5},"Select the Monster","Comic Sans MS",30,"Centre");
             drawBoldText(new double[]{x+w*0.27,y,x+w*0.73,y+h,0.5},"to attack","Comic Sans MS",30,"Centre");
-        } else if (state == 1.2f && selectedItem != null){
+        } else if (state == 1.2f && selectedItem != null){ // Shows the item's title and description when selected in the item game screen
             drawBoldText(new double[]{x+w*0.27,y-h/6,x+w*0.73,y+h,-0.5}, selectedItem.getTitle(), "Comic Sans MS", 25, "Centre");
             if(selectedItem.getDescription().length() < 35){
                 drawText(new double[]{x+w*0.27,y-h/6,x+w*0.73,y+h,0.5}, "This is a " + selectedItem.getDescription(), "Comic Sans MS", 18, "Centre");
@@ -275,6 +284,7 @@ public class DnDGame extends GameEngine{
         }
     }
 
+    // Paints the buttons seen on the screen, as well as how they show when their selected
     public void paintButton(CoolButton button){
          //Key is the text of the label
         changeColor(black);
@@ -294,6 +304,7 @@ public class DnDGame extends GameEngine{
         }
     }
 
+    // Used to centre the items in the item game screen
     public static void centreItems(List<String> ids){
         int nItems = ids.size();
         int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1); //Dimensions of the box
@@ -307,7 +318,9 @@ public class DnDGame extends GameEngine{
         }
     }
 
+//--------------------------------------------- Mouse Functions ---------------------------------------------//
 
+    // Defines if a button is pressed or not when a mouse press is detected
     public void mousePressed(MouseEvent e){
         int mouseX = e.getX();
         int mouseY = e.getY();
@@ -326,6 +339,7 @@ public class DnDGame extends GameEngine{
         }
     }
 
+    // Defines if a button is hovering over something ie an enemy or button
     public void mouseMoved(MouseEvent e){
         int mouseX = e.getX();
         int mouseY = e.getY();
@@ -352,6 +366,7 @@ public class DnDGame extends GameEngine{
         }
     }
 
+    // Get functions for the game window
     public static int getWidth(){
         return width;
     }
@@ -360,17 +375,19 @@ public class DnDGame extends GameEngine{
         return height;
     }
 
+    // Adds an event to the past events string
     public static void addEvent(String event){
         pastEvents.add(event);
     }
 
+    // Sound & screen management in response to button presses
     public void callButtonMethod(int ID,String condition){
         if (condition == "press"){
-            playAudio(buttonSound);
+            playAudio(buttonSound); // Plays when the mouse is clicked on a button
         }
-        if(state == 0){
+        if(state == 0){ // Main Menu State
             switch(ID) {
-                case 15:
+                case 15: // Stops the menu music and plays the fight music when starting the game
                     if (condition == "press"){
                         stopAudioLoop(menuMusic);
                         startAudioLoop(fightMusic);
@@ -378,13 +395,13 @@ public class DnDGame extends GameEngine{
                         break;
                     }
 
-                case 16:
+                case 16: // Quits the game
                     if (condition == "press"){
                         System.exit(420);
                     }
             }
         }
-        else if(state == 1){
+        else if(state == 1){ // Battle Screen
             switch(ID) {
                 case 0:
                     if (condition == "press") state = 1.1f; // Fight Menu State
@@ -393,15 +410,15 @@ public class DnDGame extends GameEngine{
                     if (condition == "press") state = 1.2f; // Item Menu State
                     break;
 
-                case 2:
+                case 2: // Heal Button
                     if (condition == "press") {
                         selectedPlayer.heal();
                         pastEvents.add("You healed, giving 40 health");
                         if(previousMonster != null) if(previousMonster.getHealth() != 0) pastEvents.addAll(previousMonster.attackCreature(selectedPlayer));
-                    }; // Item Menu State
+                    };
                     break;
 
-                case 3:
+                case 3: // Run Button
                     if (condition == "press"){
                         state = 10.1f;
                         stopAudioLoop(fightMusic);
@@ -411,19 +428,19 @@ public class DnDGame extends GameEngine{
             }
         }
 
-        else if(state == 1.1f){
+        else if(state == 1.1f){ // Fighting
             if(ID > 3 && ID < 8) {
-                selectedMonster = ManageCreatures.monsterByIndex(ID-4);
+                selectedMonster = ManageCreatures.monsterByIndex(ID-4); // Shows selected monster
                 if(condition == "press") {
-                    pastEvents = selectedPlayer.attackCreature(selectedMonster);
-                    if(selectedMonster.getHealth() == 0){
+                    pastEvents = selectedPlayer.attackCreature(selectedMonster); // Attacks selected monster
+                    if(selectedMonster.getHealth() == 0){ // Death cycle of a monster
                         int index = onScreenMonsters.indexOf(ID + "");
                         onScreenMonsters.remove(index);
 
                     }else{
-                        pastEvents.addAll(selectedMonster.attackCreature(selectedPlayer));
+                        pastEvents.addAll(selectedMonster.attackCreature(selectedPlayer)); // The last selected monster attacks back
                     }
-                    if(onScreenMonsters.size() == 0) {
+                    if(onScreenMonsters.size() == 0) { // No monsters present in the battle menu
                         state = 10;
                         stopAudioLoop(fightMusic);
                         startAudioLoop(menuMusic);
@@ -434,7 +451,7 @@ public class DnDGame extends GameEngine{
                     else centreItems(onScreenMonsters);
                     previousMonster = selectedMonster;
                 }
-            }else {
+            }else { // Head back to the main battle screen (from the fighting screen)
                 if(condition == "press") {
                     selectedMonster = null;
                     state = 1;
@@ -442,17 +459,19 @@ public class DnDGame extends GameEngine{
             }
         }
 
+        // Item Screen
         else if(state == 1.2f){
             if(ID > 7 && ID < 11) {
                 selectedItem = ManageItems.getItem(Integer.parseInt(selectedPlayer.getItem(ID-8))-8);
             }else {
-                if (condition == "press") {
+                if (condition == "press") { // Head back to the main battle screen (from the item screen)
                     selectedItem = null;
                     state = 1;
                 }
             }
         }
 
+        // Quit to main menu buttons on battle victory, loss and forfeit
         else if(state == 10){
             if(ID == 13){
                 if(condition == "press") state = 0;

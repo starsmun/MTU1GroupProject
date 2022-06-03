@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class Monster extends BaseCreature{
+public class Monster extends BaseCreature{ // Monster Stats
     int killPrize, maxLevel;
     String name, ID;
 
@@ -16,7 +16,7 @@ public class Monster extends BaseCreature{
         this.name = name;
         Scanner scanner = null;
         try {
-            scanner = new Scanner(new BufferedReader(new FileReader("PlayerScripts/MonsterStats.txt")));
+            scanner = new Scanner(new BufferedReader(new FileReader("PlayerScripts/MonsterStats.txt"))); // // Scans the Monster stats file and allocates the data to in-engine variables
 
             String line;
             String[] mDetails;
@@ -32,7 +32,7 @@ public class Monster extends BaseCreature{
                         attack = Integer.parseInt(mDetails[5]);
                         maxLevel = Integer.parseInt(mDetails[6]);
                     }
-                    catch(NumberFormatException e){
+                    catch(NumberFormatException e){ // Default Monster Stats
                         killPrize = 0;
                         maxHealth = 10;
                         defense = 10;
@@ -54,6 +54,7 @@ public class Monster extends BaseCreature{
         }
     }
 
+    // Get functions
     public String getName(){
         return name;
     }
@@ -70,6 +71,7 @@ public class Monster extends BaseCreature{
         return killPrize;
     }
 
+    // Attacking function -- for Monster -> Player attacks. Also updates event list
     public List<String> attackCreature(Player player) {
         super.attackCreature(player);
 

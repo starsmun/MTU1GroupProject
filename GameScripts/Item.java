@@ -32,7 +32,7 @@ public class Item extends ManageItems{
         return description;
     }
 
-    public String useItem() {
+    public String useItem() { // ITEMS NOT CURRENTLY IMPLEMENTED
         String temp = "";
         if (count > 0) {
             switch(effect) {

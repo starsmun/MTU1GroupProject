@@ -14,7 +14,7 @@ public class ManageItems {
     public static void setupItems() {
         Scanner scanner = null;
         int lineNumber = 0;
-        try {
+        try { // Scans the item stats file and allocates the data to in-engine variables
             scanner = new Scanner(new BufferedReader(new FileReader("GameScripts/ItemStats.txt")));
 
             String line;

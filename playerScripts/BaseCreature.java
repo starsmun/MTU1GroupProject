@@ -3,7 +3,7 @@ package PlayerScripts;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BaseCreature {
+public class BaseCreature { // Stats & Get functions
     int maxHealth, defense, attack, skillLevel,health;
 
     public int getSkillLevel(){
