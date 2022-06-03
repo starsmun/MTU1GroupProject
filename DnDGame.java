@@ -22,7 +22,7 @@ public class DnDGame extends GameEngine{
     private static Monster previousMonster = null;
     private static Item selectedItem = null;
 
-    private static AudioClip menuMusic, fightMusic, buttonSound;
+    private static AudioClip menuMusic, fightMusic, buttonSound, monsterDeath, playerDeath;
 
     private static List<String> onScreenMonsters = new LinkedList<>();
     private static List<String> onScreenItems = new LinkedList<>();
@@ -56,6 +56,8 @@ public class DnDGame extends GameEngine{
         menuMusic = loadAudio("GameAssets/backgroundMusic.wav");
         fightMusic = loadAudio("GameAssets/fightMusic.wav");
         buttonSound = loadAudio("GameAssets/buttonClick.wav");
+        monsterDeath = loadAudio("GameAssets/monsterDeath.wav");
+        playerDeath = loadAudio("GameAssets/playerDeath.wav");
 
 
         selectedPlayer = ManageCreatures.playerByIndex(0); // This is the current player
@@ -125,6 +127,7 @@ public class DnDGame extends GameEngine{
 
         // If Player Dies, reset gold, change state, change music, and heal alittle
         if(selectedPlayer.getHealth() == 0){
+            playAudio(playerDeath);
             state = 10.2f;
             stopAudioLoop(fightMusic);
             startAudioLoop(menuMusic);
@@ -229,24 +232,24 @@ public class DnDGame extends GameEngine{
         // Draws player stats & status
         drawImage(player1,(x+w*0.23/2)-70,y+10,180,180);
         changeColor(black);
-        drawBoldText(new double[]{x,y+h/2,x+w*0.27,y+h,-5},"Your Stats: ","Comic Sans MS",26,"Centre");
+        drawBoldText(new double[]{x,y,x+w*0.27,y+h/5,0},"Your Stats:","Comic Sans MS",26,"Centre");
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,-1},"Health: " + selectedPlayer.getHealth() + "/" + selectedPlayer.getMaxHealth(),"Comic Sans MS",20,"Centre");
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,0},"Attack: " + selectedPlayer.getAttack(),"Comic Sans MS",20,"Centre");
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,1},"Defence: " + selectedPlayer.getDefense(),"Comic Sans MS",20,"Centre");
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,2},"Gold: " + selectedPlayer.getMoney(),"Comic Sans MS",20,"Centre");
 
         // Draws the event viewer
-        drawBoldText(new double[]{x+w*1.45,y+h/2,x+w*0.27,y+h,-5},"Recap:","Comic Sans MS",26,"Centre");
+        drawBoldText(new double[]{x+w*0.75,y,x+w,y+h/5,0},"Recap:","Comic Sans MS",26,"Centre");
         int i = 0;
         for(String event : pastEvents){
             if(event.length() < 30){
                 i++;
-                drawText(x+w*0.75,y+(width/40*(i+1.50)),event,"Comic Sans MS",18);
+                drawText(x+w*0.74,y+(width/40*(i+1.50)),event,"Comic Sans MS",18);
             }else{
                 i++;
-                drawText(x+w*0.75,y+(width/40*(i+1.50)),event.split(",")[0],"Comic Sans MS",18);
+                drawText(x+w*0.74,y+(width/40*(i+1.50)),event.split(",")[0],"Comic Sans MS",18);
                 i++;
-                drawText(x+w*0.75,y+(width/40*(i+1.50)),event.split(",")[1],"Comic Sans MS",18);
+                drawText(x+w*0.74,y+(width/40*(i+1.50)),event.split(",")[1],"Comic Sans MS",18);
             }
 
         }
@@ -255,7 +258,7 @@ public class DnDGame extends GameEngine{
         if((state == 1) || (state == 1.2f)){
             CoolButton button;
             if(state==1){
-                drawBoldText(new double[]{x+w*0.75,y+h/2,x+w*0.27,y+h,-5},"What would you like to do?","Comic Sans MS",26,"Centre");
+                drawBoldText(new double[]{x+w*0.27,y,x+w*0.73,y+h/4,0},"What would you like to do?","Comic Sans MS",26,"Centre");
 
             } // Draws the monsters as images using their button ID's values
             for(String id: onScreenMonsters){
@@ -437,6 +440,7 @@ public class DnDGame extends GameEngine{
                         int index = onScreenMonsters.indexOf(ID + "");
                         onScreenMonsters.remove(index);
                         centreItems(onScreenMonsters);
+                        playAudio(monsterDeath);
 
                     }else{
                         pastEvents.addAll(selectedMonster.attackCreature(selectedPlayer)); // The last selected monster attacks back
