@@ -309,9 +309,9 @@ public class DnDGame extends GameEngine{
         int nItems = ids.size();
         int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1); //Dimensions of the box
         float offset = (nItems - 1) / 2f;
-        int count = Integer.parseInt(ids.get(0));
+        int count = 0;
         for(float i = -offset;i <= offset;i++){
-            CoolButton button = buttons.get(count);
+            CoolButton button = buttons.get(Integer.parseInt(ids.get(count)));
             float xPosRelative = i * button.width;
             button.setButtonPosX((int) (x + (w / 2) + xPosRelative * 1.3) - button.width/2);
             count++;
@@ -436,6 +436,7 @@ public class DnDGame extends GameEngine{
                     if(selectedMonster.getHealth() == 0){ // Death cycle of a monster
                         int index = onScreenMonsters.indexOf(ID + "");
                         onScreenMonsters.remove(index);
+                        centreItems(onScreenMonsters);
 
                     }else{
                         pastEvents.addAll(selectedMonster.attackCreature(selectedPlayer)); // The last selected monster attacks back
@@ -448,7 +449,6 @@ public class DnDGame extends GameEngine{
                         pastEvents.add("Nobodys Here");
                         pastEvents.add("Go Home");
                     }
-                    else centreItems(onScreenMonsters);
                     previousMonster = selectedMonster;
                 }
             }else { // Head back to the main battle screen (from the fighting screen)
