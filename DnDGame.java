@@ -220,7 +220,7 @@ public class DnDGame extends GameEngine{
 
     public void paintFightLayout(){
         int x = width/40, y = (int) (height/2), w = (int) (width/1.05), h = (int) (height/2.1); //Dimensions of the box
-        drawImage(player1,(x+w*0.27/2)-70,y+10,180,180);
+        drawImage(player1,(x+w*0.23/2)-70,y+10,180,180);
         changeColor(black);
 
         drawBoldText(new double[]{x,y+h/2,x+w*0.27,y+h,-5},"Your Stats: ","Comic Sans MS",26,"Centre");
@@ -229,27 +229,33 @@ public class DnDGame extends GameEngine{
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,1},"Defence: " + selectedPlayer.getDefense(),"Comic Sans MS",20,"Centre");
         drawText(new double[]{x,y+h/2,x+w*0.27,y+h,2},"Gold: " + selectedPlayer.getMoney(),"Comic Sans MS",20,"Centre");
 
+        drawBoldText(new double[]{x+w*1.45,y+h/2,x+w*0.27,y+h,-5},"Recap:","Comic Sans MS",26,"Centre");
         int i = 0;
         for(String event : pastEvents){
             if(event.length() < 30){
                 i++;
-                drawText(x+w*0.75,y+(width/40*(i+1)),event,"Comic Sans MS",18);
+                drawText(x+w*0.75,y+(width/40*(i+1.50)),event,"Comic Sans MS",18);
             }else{
                 i++;
-                drawText(x+w*0.75,y+(width/40*(i+1)),event.split(",")[0],"Comic Sans MS",18);
+                drawText(x+w*0.75,y+(width/40*(i+1.50)),event.split(",")[0],"Comic Sans MS",18);
                 i++;
-                drawText(x+w*0.75,y+(width/40*(i+1)),event.split(",")[1],"Comic Sans MS",18);
+                drawText(x+w*0.75,y+(width/40*(i+1.50)),event.split(",")[1],"Comic Sans MS",18);
             }
 
         }
 
         if((state == 1) || (state == 1.2f)){
             CoolButton button;
+            if(state==1){
+                drawBoldText(new double[]{x+w*0.75,y+h/2,x+w*0.27,y+h,-5},"What would you like to do?","Comic Sans MS",26,"Centre");
+
+            }
             for(String id: onScreenMonsters){
                 button = buttons.get(Integer.parseInt(id)); drawImage(button.image, button.buttonPosX+monsterOffsetsX[Integer.parseInt(id)-4],button.buttonPosY+monsterOffsetsY[Integer.parseInt(id)-4],button.width,button.height);
             }
         }
         if(state == 1.1f && selectedMonster != null){
+            drawBoldText(new double[]{x+w*0.75,y+h/2,x+w*0.27,y+h,-5},"What would you like to do?","Comic Sans MS",26,"Centre");
             drawBoldText(new double[]{x+w*0.27,y,x+w*0.73,y+h,-1.5},selectedMonster.getName(),"Comic Sans MS",30,"Centre");
             drawText(new double[]{x+w*0.27,y,x+w*0.73,y+h,-0.5},"Health: " + selectedMonster.getHealth() + "/" + selectedMonster.getMaxHealth(),"Comic Sans MS",23,"Centre");
             drawText(new double[]{x+w*0.27,y,x+w*0.73,y+h,0.5},"Attack: " + selectedMonster.getAttack(),"Comic Sans MS",23,"Centre");
