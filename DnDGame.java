@@ -22,7 +22,7 @@ public class DnDGame extends GameEngine{
     private static Monster previousMonster = null;
     private static Item selectedItem = null;
 
-    private static AudioClip menuMusic, fightMusic;
+    private static AudioClip menuMusic, fightMusic, buttonSound;
 
     private static List<String> onScreenMonsters = new LinkedList<>();
     private static List<String> onScreenItems = new LinkedList<>();
@@ -55,6 +55,7 @@ public class DnDGame extends GameEngine{
         //       Load Music     //
         menuMusic = loadAudio("GameAssets/backgroundMusic.wav");
         fightMusic = loadAudio("GameAssets/fightMusic.wav");
+        buttonSound = loadAudio("GameAssets/buttonClick.wav");
 
 
         selectedPlayer = ManageCreatures.playerByIndex(0); // This is the current player
@@ -255,7 +256,6 @@ public class DnDGame extends GameEngine{
             }
         }
         if(state == 1.1f && selectedMonster != null){
-            drawBoldText(new double[]{x+w*0.75,y+h/2,x+w*0.27,y+h,-5},"What would you like to do?","Comic Sans MS",26,"Centre");
             drawBoldText(new double[]{x+w*0.27,y,x+w*0.73,y+h,-1.5},selectedMonster.getName(),"Comic Sans MS",30,"Centre");
             drawText(new double[]{x+w*0.27,y,x+w*0.73,y+h,-0.5},"Health: " + selectedMonster.getHealth() + "/" + selectedMonster.getMaxHealth(),"Comic Sans MS",23,"Centre");
             drawText(new double[]{x+w*0.27,y,x+w*0.73,y+h,0.5},"Attack: " + selectedMonster.getAttack(),"Comic Sans MS",23,"Centre");
@@ -317,7 +317,7 @@ public class DnDGame extends GameEngine{
             if(button.stateR == state){
                 if(mouseX >= button.buttonPosX && mouseX <= button.buttonPosX+button.width && mouseY >= button.buttonPosY && mouseY <= button.buttonPosY+button.height) {
                     if(button.ID > 3 && button.ID < 8) {
-                        if (onScreenMonsters.indexOf(String.valueOf(button.ID)) >= 0) callButtonMethod(button.ID, "press");
+                        if (onScreenMonsters.indexOf(String.valueOf(button.ID)) >= 0) {callButtonMethod(button.ID, "press");}
                     }
                     else callButtonMethod(button.ID, "press");
 
@@ -365,6 +365,9 @@ public class DnDGame extends GameEngine{
     }
 
     public void callButtonMethod(int ID,String condition){
+        if (condition == "press"){
+            playAudio(buttonSound);
+        }
         if(state == 0){
             switch(ID) {
                 case 15:
